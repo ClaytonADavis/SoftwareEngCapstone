@@ -1,0 +1,63 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+}
+
+plugins {
+  id 'com.github.spotbugs' version '4.7.3'
+  id 'com.diffplug.spotless' version '5.14.3'
+  id 'com.adarshr.test-logger' version '3.0.0'
+}
+
+subprojects {
+  apply plugin: 'com.github.spotbugs'
+  apply plugin: 'com.diffplug.spotless'
+  apply plugin: 'com.adarshr.test-logger'
+  apply plugin: 'jacoco'
+  apply plugin: 'eclipse'
+  apply plugin: 'idea'
+
+
+  tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-proc:none', '-Xlint:unchecked', '-Xlint:deprecation']
+  }
+
+  gradle.taskGraph.beforeTask { task ->
+    if (task.name.toLowerCase().contains('spotbugs')) {
+      task.effort = 'max'
+      task.reportLevel = 'low'
+      task.reports {
+        html.enabled = true
+        html.destination = file('$buildDir/reports/spotbugs/main/spotbugs.html')
+        html.stylesheet = 'fancy-hist.xsl'
+        xml.enabled = false
+      }
+    }
+  }
+
+  afterEvaluate {
+    def spotless = tasks.findByName('spotlessApply')
+    if (spotless) {
+      tasks.withType(JavaCompile) {
+        finalizedBy(spotless)
+      }
+    }
+  }
+  
+  spotless {
+    format 'misc', {
+      target '*.gradle', '*.md', '.gitignore'
+  
+      trimTrailingWhitespace()
+      indentWithSpaces()
+      endWithNewline()
+    }
+    java {
+      googleJavaFormat()
+    }
+  }
+
+  spotlessJava.dependsOn 'compileJava'
+  spotlessJava.dependsOn 'compileTestJava'
+}

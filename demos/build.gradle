@@ -1,0 +1,66 @@
+plugins {
+  id 'application'
+  id 'com.github.andygoossens.gradle-modernizer-plugin' version '1.6.0'
+  id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+repositories {
+  mavenCentral()
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+group = 'demos'
+version = '1.0'
+
+application {
+  mainClass = 'demos.Main'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': application.mainClass
+    }
+}
+
+dependencies {
+  implementation project(':lib')
+  testImplementation project(':lib')
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+  testImplementation 'org.hamcrest:hamcrest:2.2'
+  testImplementation 'io.cucumber:cucumber-java:6.11.0'
+  testImplementation 'org.xmlunit:xmlunit-core:2.6.3'
+  testImplementation 'org.xmlunit:xmlunit-matchers:2.8.2'
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
+
+configurations {
+  cucumberRuntime {
+    extendsFrom testImplementation
+  }
+}
+
+task cucumber() {
+  dependsOn assemble, compileTestJava
+  doLast {
+    javaexec {
+      mainClass = 'io.cucumber.core.cli.Main'
+      classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+      args = ['--plugin', 'html:build/reports/cucumber.html', '--plugin', 'pretty', '--glue', 'gradle.cucumber', 'src/test/resources']
+    }
+  }
+  timeout = Duration.ofMinutes(3)
+}
+
+tasks.withType(Javadoc).all {
+  enabled = false
+}
+
+spotbugsMain.dependsOn 'test'
+spotbugsTest.dependsOn 'test'
+spotbugsMain.mustRunAfter 'test'
+spotbugsTest.mustRunAfter 'test'

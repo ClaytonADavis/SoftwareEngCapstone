@@ -1,0 +1,35 @@
+
+plugins {
+  id 'java-library'
+  id 'com.github.andygoossens.gradle-modernizer-plugin' version '1.6.0'
+}
+
+repositories {
+  mavenCentral()
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+group = 'edu.wofford.woclo'
+version = '1.0'
+description = """A command-line option parser"""
+
+dependencies {
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
+
+javadoc {
+  options {
+    links 'https://docs.oracle.com/javase/8/docs/api/'
+  }
+}
+
+spotbugsMain.dependsOn 'test'
+spotbugsTest.dependsOn 'test'
+spotbugsMain.mustRunAfter 'test'
+spotbugsTest.mustRunAfter 'test'

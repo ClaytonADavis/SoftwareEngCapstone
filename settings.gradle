@@ -1,0 +1,3 @@
+rootProject.name = 'WoCLO'
+include('lib')
+include('demos')
