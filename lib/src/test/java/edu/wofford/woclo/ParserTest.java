@@ -19,6 +19,6 @@ public class ParserTest {
     parse.addIdentifyer("Args2");
     parse.addIdentifyer("Args3");
     parse.addIdentifyerAtIndex("Args4", 1);
-    assertEquals("Arg4", parse.getIdendtifyer(1));
+    assertEquals("Args4", parse.getIdendtifyer(1));
   }
 }
