@@ -19,6 +19,18 @@ public class ParserTest {
     parse.addIdentifyer("Args2");
     parse.addIdentifyer("Args3");
     parse.addIdentifyerAtIndex("Args4", 1);
-    assertEquals("Arg4", parse.getIdendtifyer(1));
+    assertEquals("Args4", parse.getIdendtifyer(1));
+  }
+
+  @Test
+  public void testParseCommandLine() {
+    Parser parse = new Parser();
+    parse.addIdentifyer("Arg1");
+    parse.addIdentifyer("Arg2");
+    parse.addIdentifyer("Arg3");
+    parse.addIdentifyer("Arg4");
+    String[] commands = {"1", "2", "3", "4"};
+    parse.parseCommandLine(commands);
+    assertEquals("2", parse.getValue("Arg2"));
   }
 }
