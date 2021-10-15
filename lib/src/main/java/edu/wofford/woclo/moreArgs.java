@@ -1,3 +1,3 @@
 package edu.wofford.woclo;
 
-public class moreArgs extends RuntimeException {}
+public class MoreArgs extends RuntimeException {}

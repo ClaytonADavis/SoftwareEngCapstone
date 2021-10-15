@@ -30,7 +30,69 @@ public class ParserTest {
     parse.addIdentifyer("Arg3");
     parse.addIdentifyer("Arg4");
     String[] commands = {"1", "2", "3", "4"};
-    parse.parseCommandLine(commands);
+    try {
+      parse.parseCommandLine(commands);
+    } catch (LessArgs e) {
+      assert (false);
+    }
+    try {
+      parse.parseCommandLine(commands);
+    } catch (MoreArgs e) {
+      assert (false);
+    }
     assertEquals("2", parse.getValue("Arg2"));
+  }
+
+  @Test
+  public void testLessArgs() {
+    Parser parse = new Parser();
+    parse.addIdentifyer("Arg1");
+    parse.addIdentifyer("Arg2");
+    parse.addIdentifyer("Arg3");
+    parse.addIdentifyer("Arg4");
+    String[] commands = {"1", "2", "3"};
+    try {
+      parse.parseCommandLine(commands);
+    } catch (LessArgs e) {
+      assert (true);
+    }
+  }
+
+  @Test
+  public void testMoreArgs() {
+    Parser parse = new Parser();
+    parse.addIdentifyer("Arg1");
+    parse.addIdentifyer("Arg2");
+    parse.addIdentifyer("Arg3");
+    parse.addIdentifyer("Arg4");
+    String[] commands = {"1", "2", "3", "4", "5"};
+    try {
+      parse.parseCommandLine(commands);
+    } catch (MoreArgs e) {
+      assert (true);
+    }
+  }
+
+  @Test
+  public void testAddIdentifyerArray() {
+    Parser parse = new Parser();
+    String[] idArr = {"Arg1", "Arg2", "Arg3"};
+    parse.addIdentifyerArray(idArr);
+    assertEquals("Arg3", parse.getIdendtifyer(2));
+  }
+
+  @Test
+  public void testHelpDefault() {
+    Parser parse = new Parser();
+    parse.addIdentifyer("Arg1");
+    parse.addIdentifyer("Arg2");
+    parse.addIdentifyer("Arg3");
+    parse.addIdentifyer("Arg4");
+    String[] commands = {"1", "2", "3", "4", "-h"};
+    try {
+      parse.parseCommandLine(commands);
+    } catch (HelpException e) {
+      assert (true);
+    }
   }
 }

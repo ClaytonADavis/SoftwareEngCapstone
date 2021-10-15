@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="edu.wofford.woclo.ParserTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-10-14T15:41:50" hostname="Roberts-MBP-2.wofford.int" time="0.048">
-  <properties/>
-  <testcase name="testAddIdentifyer()" classname="edu.wofford.woclo.ParserTest" time="0.043"/>
-  <testcase name="testAddIdentifyerAtIndex()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
-  <testcase name="testParseCommandLine()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

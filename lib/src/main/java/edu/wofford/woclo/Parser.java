@@ -6,6 +6,15 @@ public class Parser {
   private List<String> identifyer;
   private Map<String, String> map;
 
+  private boolean getHelp(String[] argArr) {
+    for (String s : argArr) {
+      if (s.equals("-h") || s.equals("--help")) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public Parser() {
     identifyer = new ArrayList<String>();
     map = new HashMap<String, String>();
@@ -24,11 +33,14 @@ public class Parser {
   }
 
   public void parseCommandLine(String[] commandLine) {
+    if (getHelp(commandLine)) {
+      throw new HelpException();
+    }
     if (commandLine.length < identifyer.size()) {
-      throw new lessArgs();
+      throw new LessArgs();
     }
     if (commandLine.length > identifyer.size()) {
-      throw new moreArgs();
+      throw new MoreArgs();
     }
     int size = commandLine.length;
     for (int i = 0; i < size; i++) {
@@ -38,5 +50,11 @@ public class Parser {
 
   public String getValue(String command) {
     return map.get(command);
+  }
+
+  public void addIdentifyerArray(String[] idArr) {
+    for (String s : idArr) {
+      identifyer.add(s);
+    }
   }
 }
