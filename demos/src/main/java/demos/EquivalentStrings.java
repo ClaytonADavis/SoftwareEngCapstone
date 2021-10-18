@@ -1,6 +1,6 @@
 package demos;
 
-// import edu.wofford.woclo.*;
+import edu.wofford.woclo.*;
 
 public class EquivalentStrings {
   private String s1;
@@ -81,7 +81,7 @@ public class EquivalentStrings {
         setDict1(i, 0, getS1().charAt(i));
         setDict1(i, 1, (char) (getUniqueChar() + '0'));
       }
-      System.out.println(getDict1()[i][0] + " " + getDict1()[i][1]);
+      // System.out.println(getDict1()[i][0] + " " + getDict1()[i][1]);
     }
   }
 
@@ -96,7 +96,7 @@ public class EquivalentStrings {
         setDict2(i, 0, getS2().charAt(i));
         setDict2(i, 1, (char) (getUniqueChar() + '0'));
       }
-      System.out.println(getDict2()[i][0] + " " + getDict2()[i][1]);
+      // System.out.println(getDict2()[i][0] + " " + getDict2()[i][1]);
     }
   }
 
@@ -110,8 +110,35 @@ public class EquivalentStrings {
   }
 
   public static void main(String... args) {
-    EquivalentStrings test = new EquivalentStrings("cocoon", "xyxyyz");
-    test.buildDict1();
-    test.buildDict2();
+    String s1;
+    String s2;
+    Parser parse1 = new Parser();
+    parse1.addIdentifyer("string1");
+    parse1.addIdentifyer("string2");
+    try {
+      parse1.parseCommandLine(args);
+      s1 = parse1.getValue("string1");
+      s2 = parse1.getValue("string2");
+      EquivalentStrings test = new EquivalentStrings(s1, s2);
+      test.buildDict1();
+      test.buildDict2();
+      if (test.isEqual()) {
+        System.out.println("equivalent");
+      } else {
+        System.out.println("not equivalent");
+      }
+    } catch (MoreArgs ex) {
+      // need identifier size
+      String val = args[2];
+      System.out.println("EquivalentStrings error: the value " + val + " matches no argument");
+    } catch (LessArgs ex) {
+      if (args.length == 0) {
+        System.out.println("EquivalentStrings error: the argument string1 is required");
+      } else {
+        System.out.println("EquivalentStrings error: the argument string2 is required");
+      }
+    } catch (HelpException ex) {
+      System.out.println("Arguments required s1 s2");
+    }
   }
 }

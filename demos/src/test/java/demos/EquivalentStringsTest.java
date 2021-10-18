@@ -12,7 +12,7 @@ class EquivalentStringsTest {
     EquivalentStrings test = new EquivalentStrings("cocoon", "xyxyyz");
     test.buildDict1();
     test.buildDict2();
-    assertFalse(test.isEqual());
+    assertTrue(test.isEqual());
   }
 
   @Test
@@ -64,5 +64,54 @@ class EquivalentStringsTest {
     test.buildDict1();
     test.buildDict2();
     assertTrue(test.isEqual());
+  }
+
+  // should this pass or fail??
+  @Test
+  void testisEqual3() {
+    EquivalentStrings test = new EquivalentStrings("", "");
+    test.buildDict1();
+    test.buildDict2();
+    assertTrue(test.isEqual());
+  }
+
+  @Test
+  void testisEqual4() {
+    EquivalentStrings test = new EquivalentStrings(" ", " ");
+    test.buildDict1();
+    test.buildDict2();
+    assertTrue(test.isEqual());
+  }
+
+  @Test
+  void testisEqual5() {
+    EquivalentStrings test = new EquivalentStrings("aaaaa", "aaaaa");
+    test.buildDict1();
+    test.buildDict2();
+    assertTrue(test.isEqual());
+  }
+
+  @Test
+  void testisEqual6() {
+    EquivalentStrings test = new EquivalentStrings("aaaaa", "bbbbb");
+    test.buildDict1();
+    test.buildDict2();
+    assertTrue(test.isEqual());
+  }
+
+  @Test
+  void testisEqual7() {
+    EquivalentStrings test = new EquivalentStrings("  ", "aa");
+    test.buildDict1();
+    test.buildDict2();
+    assertTrue(test.isEqual());
+  }
+
+  @Test
+  void testisEqual8() {
+    EquivalentStrings test = new EquivalentStrings("", " ");
+    test.buildDict1();
+    test.buildDict2();
+    assertFalse(test.isEqual());
   }
 }
