@@ -113,8 +113,8 @@ public class EquivalentStrings {
     String s1;
     String s2;
     Parser parse1 = new Parser();
-    parse1.addIdentifyer("string1");
-    parse1.addIdentifyer("string2");
+    parse1.addIdentifier("string1");
+    parse1.addIdentifier("string2");
     try {
       parse1.parseCommandLine(args);
       s1 = parse1.getValue("string1");
@@ -127,18 +127,19 @@ public class EquivalentStrings {
       } else {
         System.out.println("not equivalent");
       }
-    } catch (MoreArgs ex) {
+    } catch (TooManyArgsException ex) {
       // need identifier size
       String val = args[2];
       System.out.println("EquivalentStrings error: the value " + val + " matches no argument");
-    } catch (LessArgs ex) {
+    } catch (NotEnoughArgsException ex) {
       if (args.length == 0) {
         System.out.println("EquivalentStrings error: the argument string1 is required");
       } else {
         System.out.println("EquivalentStrings error: the argument string2 is required");
       }
     } catch (HelpException ex) {
-      System.out.println("Arguments required s1 s2");
+      System.out.println(
+          "usage: java EquivalentStrings [-h] string1 string2\n\nDetermine if two strings are equivalent.\n\npositional arguments:\n string1     (string)      the first string\n string2     (string)      the second string\n\nnamed arguments:\n -h, --help  show this help message and exit");
     }
   }
 }

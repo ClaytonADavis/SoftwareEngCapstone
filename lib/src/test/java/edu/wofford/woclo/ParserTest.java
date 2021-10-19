@@ -6,88 +6,88 @@ import org.junit.jupiter.api.*;
 
 public class ParserTest {
   @Test
-  public void testAddIdentifyer() {
+  public void testAddIdentifier() {
     Parser parse = new Parser();
-    parse.addIdentifyer("Arg1");
+    parse.addIdentifier("Arg1");
     assertEquals("Arg1", parse.getIdendtifyer(0));
   }
 
   @Test
-  public void testAddIdentifyerAtIndex() {
+  public void testAddIdentifierAtIndex() {
     Parser parse = new Parser();
-    parse.addIdentifyer("Arg1");
-    parse.addIdentifyer("Args2");
-    parse.addIdentifyer("Args3");
-    parse.addIdentifyerAtIndex("Args4", 1);
+    parse.addIdentifier("Arg1");
+    parse.addIdentifier("Args2");
+    parse.addIdentifier("Args3");
+    parse.addIdentifierAtIndex("Args4", 1);
     assertEquals("Args4", parse.getIdendtifyer(1));
   }
 
   @Test
   public void testParseCommandLine() {
     Parser parse = new Parser();
-    parse.addIdentifyer("Arg1");
-    parse.addIdentifyer("Arg2");
-    parse.addIdentifyer("Arg3");
-    parse.addIdentifyer("Arg4");
+    parse.addIdentifier("Arg1");
+    parse.addIdentifier("Arg2");
+    parse.addIdentifier("Arg3");
+    parse.addIdentifier("Arg4");
     String[] commands = {"1", "2", "3", "4"};
     try {
       parse.parseCommandLine(commands);
-    } catch (LessArgs e) {
+    } catch (NotEnoughArgsException e) {
       assert (false);
     }
     try {
       parse.parseCommandLine(commands);
-    } catch (MoreArgs e) {
+    } catch (TooManyArgsException e) {
       assert (false);
     }
     assertEquals("2", parse.getValue("Arg2"));
   }
 
   @Test
-  public void testLessArgs() {
+  public void testNotEnoughArgsException() {
     Parser parse = new Parser();
-    parse.addIdentifyer("Arg1");
-    parse.addIdentifyer("Arg2");
-    parse.addIdentifyer("Arg3");
-    parse.addIdentifyer("Arg4");
+    parse.addIdentifier("Arg1");
+    parse.addIdentifier("Arg2");
+    parse.addIdentifier("Arg3");
+    parse.addIdentifier("Arg4");
     String[] commands = {"1", "2", "3"};
     try {
       parse.parseCommandLine(commands);
-    } catch (LessArgs e) {
+    } catch (NotEnoughArgsException e) {
       assert (true);
     }
   }
 
   @Test
-  public void testMoreArgs() {
+  public void testTooManyArgsException() {
     Parser parse = new Parser();
-    parse.addIdentifyer("Arg1");
-    parse.addIdentifyer("Arg2");
-    parse.addIdentifyer("Arg3");
-    parse.addIdentifyer("Arg4");
+    parse.addIdentifier("Arg1");
+    parse.addIdentifier("Arg2");
+    parse.addIdentifier("Arg3");
+    parse.addIdentifier("Arg4");
     String[] commands = {"1", "2", "3", "4", "5"};
     try {
       parse.parseCommandLine(commands);
-    } catch (MoreArgs e) {
+    } catch (TooManyArgsException e) {
       assert (true);
     }
   }
 
   @Test
-  public void testAddIdentifyerArray() {
+  public void testAddIdentifierArray() {
     Parser parse = new Parser();
     String[] idArr = {"Arg1", "Arg2", "Arg3"};
-    parse.addIdentifyerArray(idArr);
+    parse.addIdentifierArray(idArr);
     assertEquals("Arg3", parse.getIdendtifyer(2));
   }
 
   @Test
   public void testHelpDefault() {
     Parser parse = new Parser();
-    parse.addIdentifyer("Arg1");
-    parse.addIdentifyer("Arg2");
-    parse.addIdentifyer("Arg3");
-    parse.addIdentifyer("Arg4");
+    parse.addIdentifier("Arg1");
+    parse.addIdentifier("Arg2");
+    parse.addIdentifier("Arg3");
+    parse.addIdentifier("Arg4");
     String[] commands = {"1", "2", "3", "4", "-h"};
     try {
       parse.parseCommandLine(commands);
