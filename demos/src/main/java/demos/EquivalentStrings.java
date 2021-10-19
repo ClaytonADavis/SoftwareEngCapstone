@@ -113,8 +113,8 @@ public class EquivalentStrings {
     String s1;
     String s2;
     Parser parse1 = new Parser();
-    parse1.addIdentifyer("string1");
-    parse1.addIdentifyer("string2");
+    parse1.addIdentifier("string1");
+    parse1.addIdentifier("string2");
     try {
       parse1.parseCommandLine(args);
       s1 = parse1.getValue("string1");
@@ -127,11 +127,11 @@ public class EquivalentStrings {
       } else {
         System.out.println("not equivalent");
       }
-    } catch (MoreArgs ex) {
+    } catch (TooManyArgsException ex) {
       // need identifier size
       String val = args[2];
       System.out.println("EquivalentStrings error: the value " + val + " matches no argument");
-    } catch (LessArgs ex) {
+    } catch (NotEnoughArgsException ex) {
       if (args.length == 0) {
         System.out.println("EquivalentStrings error: the argument string1 is required");
       } else {
