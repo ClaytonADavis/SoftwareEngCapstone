@@ -88,7 +88,7 @@ Circumstances that require special care are
    * if there are more identifiers than arguments to be associated
    * if there are more arguments than chosen identifiers
 
- 
+
 #### Feature 2
 Allow the inclusion of additional descriptive information on the program and each argument and provide named "-h"/"--help" argument that shows usage and help information by default.
 
@@ -748,7 +748,7 @@ The directory structure that is assumed by Gradle (it can be changed if you want
                |                - resources  (any test resources go here)
                |
                 - README.md  (this file)
-               |
+               | 
                 - settings.gradle  (project settings)
 
 
