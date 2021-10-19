@@ -138,7 +138,8 @@ public class EquivalentStrings {
         System.out.println("EquivalentStrings error: the argument string2 is required");
       }
     } catch (HelpException ex) {
-      System.out.println("Arguments required s1 s2");
+      System.out.println(
+          "usage: java EquivalentStrings [-h] string1 string2\n\nDetermine if two strings are equivalent.\n\npositional arguments:\n string1     (string)      the first string\n string2     (string)      the second string\n\nnamed arguments:\n -h, --help  show this help message and exit");
     }
   }
 }
