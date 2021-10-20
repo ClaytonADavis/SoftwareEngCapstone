@@ -29,11 +29,11 @@ public class EquivalentStrings {
     return s2;
   }
 
-  public char[][] getDict1() {
+  protected char[][] getDict1() {
     return dict1;
   }
 
-  public char[][] getDict2() {
+  protected char[][] getDict2() {
     return dict2;
   }
 

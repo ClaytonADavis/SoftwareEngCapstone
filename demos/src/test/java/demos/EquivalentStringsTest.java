@@ -2,6 +2,7 @@ package demos;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import edu.wofford.woclo.*;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,20 @@ class EquivalentStringsTest {
     EquivalentStrings test = new EquivalentStrings("cocoon", "xyxyyz");
     char[][] dict = {{'c', '1'}, {'d', '2'}};
     assertEquals('2', test.search('d', dict));
+  }
+
+  @Test
+  void testSetUniqueChar() {
+    EquivalentStrings test = new EquivalentStrings("cocoon", "xyxyyz");
+    test.setUniqueChar(2);
+    assertEquals('2', (char) (test.getUniqueChar() + '0'));
+  }
+
+  @Test
+  void testSearchDNE() {
+    EquivalentStrings test = new EquivalentStrings("cocoon", "xyxyyz");
+    char[][] dict = {{'c', '1'}, {'d', '2'}};
+    assertEquals((char) (test.getUniqueChar() + '0'), test.search('e', dict));
   }
 
   // set getDicts to private to avoid spotbug errors
