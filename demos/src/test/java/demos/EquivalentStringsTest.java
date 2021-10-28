@@ -2,7 +2,6 @@ package demos;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.wofford.woclo.*;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +43,6 @@ class EquivalentStringsTest {
     assertEquals((char) (test.getUniqueChar() + '0'), test.search('e', dict));
   }
 
-  // set getDicts to private to avoid spotbug errors
   @Test
   void testbuildDict1() {
     EquivalentStrings test = new EquivalentStrings("cocoon", "xyxyyz");
@@ -81,7 +79,6 @@ class EquivalentStringsTest {
     assertTrue(test.isEqual());
   }
 
-  // should this pass or fail??
   @Test
   void testisEqual3() {
     EquivalentStrings test = new EquivalentStrings("", "");

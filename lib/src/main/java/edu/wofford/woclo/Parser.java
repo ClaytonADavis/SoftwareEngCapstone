@@ -68,7 +68,7 @@ public class Parser {
     identifierType.add(i, "String");
   }
   /**
-   * This method takes an array of strigns and maps them in order to the idenifier array. It also
+   * This method takes an array of strings and maps them in order to the idenifier array. It also
    * checks if there is a help flag and throws an execption if one is present.
    */
   public void parseCommandLine(String[] commandLine) {

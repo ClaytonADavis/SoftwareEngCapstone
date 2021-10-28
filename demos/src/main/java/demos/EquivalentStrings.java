@@ -81,7 +81,6 @@ public class EquivalentStrings {
         setDict1(i, 0, getS1().charAt(i));
         setDict1(i, 1, (char) (getUniqueChar() + '0'));
       }
-      // System.out.println(getDict1()[i][0] + " " + getDict1()[i][1]);
     }
   }
 
@@ -96,7 +95,6 @@ public class EquivalentStrings {
         setDict2(i, 0, getS2().charAt(i));
         setDict2(i, 1, (char) (getUniqueChar() + '0'));
       }
-      // System.out.println(getDict2()[i][0] + " " + getDict2()[i][1]);
     }
   }
 
@@ -128,7 +126,6 @@ public class EquivalentStrings {
         System.out.println("not equivalent");
       }
     } catch (TooManyArgsException ex) {
-      // need identifier size
       String val = args[2];
       System.out.println("EquivalentStrings error: the value " + val + " matches no argument");
     } catch (NotEnoughArgsException ex) {
