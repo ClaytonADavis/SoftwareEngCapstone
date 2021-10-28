@@ -33,6 +33,7 @@ public class Parser {
   public void addIdentifier(String id) {
     identifier.add(id);
   }
+  
   /** This method returns the Identifier at the given index. */
   public String getIdendtifyer(int i) {
     return identifier.get(i);
