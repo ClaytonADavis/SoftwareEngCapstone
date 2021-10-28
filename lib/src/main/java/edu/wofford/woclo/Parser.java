@@ -9,11 +9,7 @@ import java.util.*;
  */
 public class Parser {
   /** The list of identifiers. */
-  private List<String> identifierType;
-
-  private List<String> identifier;
-  /** A map of strings that relates the identifiers to the command line arguments. */
-  private Map<String, String> map;
+  private List<Identifier> identifiers;
   /** A private function that returns true if the command line contains a help flag. */
   private boolean getHelp(String[] argArr) {
     for (String s : argArr) {
@@ -24,28 +20,16 @@ public class Parser {
     return false;
   }
 
-  private Integer intCast(String map1) {
-    return Integer.parseInt(map.get(map1));
-  }
-
-  private Float floatCast(String map1) {
-    return Float.parseFloat(map.get(map1));
-  }
-
   /** This is the constructer for the Parser class. It takes no arguments. */
   public Parser() {
-    identifier = new ArrayList<String>();
-    map = new HashMap<String, String>();
-    identifierType = new ArrayList<String>();
+    identifiers = new ArrayList<Identifier>();
   }
 
   public Parser(String[] idArray, String[] typeArray) {
     this();
-    for (String s : idArray) {
-      identifier.add(s);
-    }
-    for (String s : typeArray) {
-      identifierType.add(s);
+    for (int i = 0; i < idArray.length; i++) {
+      Identifier id = new Identifier(idArray[i], typeArray[i], "");
+      identifiers.add(id);
     }
   }
 
@@ -54,18 +38,17 @@ public class Parser {
    * string and retuns void.
    */
   public void addIdentifier(String id) {
-    identifier.add(id);
-    identifierType.add("String");
+    Identifier Iden = new Identifier(id, "String", "");
+    identifiers.add(Iden);
   }
 
   /** This method returns the Identifier at the given index. */
-  public String getIdendtifyer(int i) {
-    return identifier.get(i);
+  public String getIdendtifier(int i) {
+    return identifiers.get(i).getName();
   }
   /** This method adds the given identifier to the list at the given index. */
   public void addIdentifierAtIndex(String id, int i) {
-    identifier.add(i, id);
-    identifierType.add(i, "String");
+    identifiers.add(i, new Identifier(id, "String", ""));
   }
   /**
    * This method takes an array of strings and maps them in order to the idenifier array. It also
@@ -75,15 +58,15 @@ public class Parser {
     if (getHelp(commandLine)) {
       throw new HelpException();
     }
-    if (commandLine.length < identifier.size()) {
+    if (commandLine.length < identifiers.size()) {
       throw new NotEnoughArgsException();
     }
-    if (commandLine.length > identifier.size()) {
+    if (commandLine.length > identifiers.size()) {
       throw new TooManyArgsException();
     }
     int size = commandLine.length;
     for (int i = 0; i < size; i++) {
-      map.put(identifier.get(i), commandLine[i]);
+      identifiers.get(i).addData(commandLine[i]);
     }
   }
   /**
@@ -91,14 +74,13 @@ public class Parser {
    * string.
    */
   public <T> T getValue(String command) {
-    int x = identifier.indexOf(command);
-    if (identifierType.get(x).equals("String")) {
-      return (T) map.get(command);
-    } else if (identifierType.get(x).equals("int")) {
-      return (T) intCast(command);
-    } else {
-      return (T) floatCast(command);
+    int x = 0;
+    for (Identifier i : identifiers) {
+      if (command.equals(i.getName())) {
+        x = identifiers.indexOf(i);
+      }
     }
+    return (T) identifiers.get(x).getValue();
   }
   /**
    * This method allows the user to pass an array of stings to be added to the end of the idenitifer
@@ -106,8 +88,7 @@ public class Parser {
    */
   public void addIdentifierArray(String[] idArr) {
     for (String s : idArr) {
-      identifier.add(s);
-      identifierType.add("String");
+      identifiers.add(new Identifier(s, "String", ""));
     }
   }
 }

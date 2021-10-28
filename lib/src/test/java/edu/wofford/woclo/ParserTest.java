@@ -9,7 +9,7 @@ public class ParserTest {
   public void testAddIdentifier() {
     Parser parse = new Parser();
     parse.addIdentifier("Arg1");
-    assertEquals("Arg1", parse.getIdendtifyer(0));
+    assertEquals("Arg1", parse.getIdendtifier(0));
   }
 
   @Test
@@ -19,7 +19,7 @@ public class ParserTest {
     parse.addIdentifier("Args2");
     parse.addIdentifier("Args3");
     parse.addIdentifierAtIndex("Args4", 1);
-    assertEquals("Args4", parse.getIdendtifyer(1));
+    assertEquals("Args4", parse.getIdendtifier(1));
   }
 
   @Test
@@ -78,7 +78,7 @@ public class ParserTest {
     Parser parse = new Parser();
     String[] idArr = {"Arg1", "Arg2", "Arg3"};
     parse.addIdentifierArray(idArr);
-    assertEquals("Arg3", parse.getIdendtifyer(2));
+    assertEquals("Arg3", parse.getIdendtifier(2));
   }
 
   @Test
