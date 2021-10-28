@@ -95,18 +95,19 @@ public class ParserTest {
       assert (true);
     }
   }
+
   @Test
-  public void testAddIdWType(){
+  public void testAddIdWType() {
     String[] ID = {"arg1", "arg2", "arg3"};
     String[] Type = {"String", "float", "int"};
     Parser parse = new Parser(ID, Type);
-    String[] arr = {"1", "2.2", "3"}
+    String[] arr = {"1", "2.2", "3"};
     parse.parseCommandLine(arr);
     String s = parse.getValue("arg1");
     float f = parse.getValue("arg2");
     int i = parse.getValue("arg3");
-    assertEquals("1",s);
-    assertEquals(2.2,f);
-    assertEquals(3,i);
+    assertEquals("1", s);
+    assertTrue(Math.abs(f) > 0.00000001);
+    assertEquals(3, i);
   }
 }
