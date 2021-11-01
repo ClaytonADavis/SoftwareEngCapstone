@@ -5,17 +5,20 @@ public class Identifier<T> {
   private String name;
   private String data;
   private String type;
+  private String errMsge;
 
   public Identifier() {
     name = "";
     data = "";
     type = "";
+    errMsge = "";
   }
 
   public Identifier(String name, String type, String data) {
     this.name = name;
     this.type = type;
     this.data = data;
+    errMsge = "";
   }
 
   public String getName() {
@@ -26,6 +29,10 @@ public class Identifier<T> {
     this.data = data;
   }
 
+  public String errorMessage() {
+    return errMsge;
+  }
+
   public T getValue() {
     if (type.equals("String")) {
       return (T) data;
@@ -34,6 +41,7 @@ public class Identifier<T> {
       try {
         x = Integer.parseInt(data);
       } catch (NumberFormatException e) {
+        errMsge = "the value" + data + "is not of the type integer";
         throw new IncorrectArgumentTypeException();
       }
       Integer X = Integer.valueOf(x);
@@ -43,6 +51,7 @@ public class Identifier<T> {
       try {
         f = Float.parseFloat(data);
       } catch (NumberFormatException e) {
+        errMsge = "the value" + data + "is not of the type" + type;
         throw new IncorrectArgumentTypeException();
       }
       Float F = Float.valueOf(f);

@@ -10,6 +10,8 @@ import java.util.*;
 public class Parser {
   /** The list of identifiers. */
   private List<Identifier> identifiers;
+
+  private String progName;
   /** A private function that returns true if the command line contains a help flag. */
   private boolean getHelp(String[] argArr) {
     for (String s : argArr) {
@@ -21,12 +23,13 @@ public class Parser {
   }
 
   /** This is the constructer for the Parser class. It takes no arguments. */
-  public Parser() {
+  public Parser(String name) {
     identifiers = new ArrayList<Identifier>();
+    progName = name;
   }
 
-  public Parser(String[] idArray, String[] typeArray) {
-    this();
+  public Parser(String name, String[] idArray, String[] typeArray) {
+    this(name);
     for (int i = 0; i < idArray.length; i++) {
       Identifier id = new Identifier(idArray[i], typeArray[i], "");
       identifiers.add(id);
@@ -59,9 +62,19 @@ public class Parser {
       throw new HelpException();
     }
     if (commandLine.length < identifiers.size()) {
+      System.out.println(
+          progName
+              + " error: the argument "
+              + identifiers.get(commandLine.length).getName()
+              + " is required.");
       throw new NotEnoughArgsException();
     }
     if (commandLine.length > identifiers.size()) {
+      System.out.println(
+          progName
+              + " error: the value "
+              + commandLine[identifiers.size()]
+              + " matches no argument.");
       throw new TooManyArgsException();
     }
     int size = commandLine.length;
@@ -79,6 +92,11 @@ public class Parser {
       if (command.equals(i.getName())) {
         x = identifiers.indexOf(i);
       }
+    }
+    try {
+      identifiers.get(x).getValue();
+    } catch (IncorrectArgumentTypeException e) {
+      System.out.println(progName + " error: " + identifiers.get(x).errorMessage());
     }
     return (T) identifiers.get(x).getValue();
   }

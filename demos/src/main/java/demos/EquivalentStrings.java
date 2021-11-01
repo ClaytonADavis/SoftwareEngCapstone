@@ -110,7 +110,7 @@ public class EquivalentStrings {
   public static void main(String... args) {
     String s1;
     String s2;
-    Parser parse1 = new Parser();
+    Parser parse1 = new Parser("EquivalentStrings");
     parse1.addIdentifier("string1");
     parse1.addIdentifier("string2");
     try {
@@ -126,14 +126,9 @@ public class EquivalentStrings {
         System.out.println("not equivalent");
       }
     } catch (TooManyArgsException ex) {
-      String val = args[2];
-      System.out.println("EquivalentStrings error: the value " + val + " matches no argument");
+
     } catch (NotEnoughArgsException ex) {
-      if (args.length == 0) {
-        System.out.println("EquivalentStrings error: the argument string1 is required");
-      } else {
-        System.out.println("EquivalentStrings error: the argument string2 is required");
-      }
+
     } catch (HelpException ex) {
       System.out.println(
           "usage: java EquivalentStrings [-h] string1 string2\n\nDetermine if two strings are equivalent.\n\npositional arguments:\n string1     (string)      the first string\n string2     (string)      the second string\n\nnamed arguments:\n -h, --help  show this help message and exit");
