@@ -7,14 +7,14 @@ import org.junit.jupiter.api.*;
 public class ParserTest {
   @Test
   public void testAddIdentifier() {
-    Parser parse = new Parser();
+    Parser parse = new Parser("Test");
     parse.addIdentifier("Arg1");
     assertEquals("Arg1", parse.getIdendtifier(0));
   }
 
   @Test
   public void testAddIdentifierAtIndex() {
-    Parser parse = new Parser();
+    Parser parse = new Parser("Test");
     parse.addIdentifier("Arg1");
     parse.addIdentifier("Args2");
     parse.addIdentifier("Args3");
@@ -24,7 +24,7 @@ public class ParserTest {
 
   @Test
   public void testParseCommandLine() {
-    Parser parse = new Parser();
+    Parser parse = new Parser("Test");
     parse.addIdentifier("Arg1");
     parse.addIdentifier("Arg2");
     parse.addIdentifier("Arg3");
@@ -45,7 +45,7 @@ public class ParserTest {
 
   @Test
   public void testNotEnoughArgsException() {
-    Parser parse = new Parser();
+    Parser parse = new Parser("Test");
     parse.addIdentifier("Arg1");
     parse.addIdentifier("Arg2");
     parse.addIdentifier("Arg3");
@@ -60,7 +60,7 @@ public class ParserTest {
 
   @Test
   public void testTooManyArgsException() {
-    Parser parse = new Parser();
+    Parser parse = new Parser("Test");
     parse.addIdentifier("Arg1");
     parse.addIdentifier("Arg2");
     parse.addIdentifier("Arg3");
@@ -75,7 +75,7 @@ public class ParserTest {
 
   @Test
   public void testAddIdentifierArray() {
-    Parser parse = new Parser();
+    Parser parse = new Parser("Test");
     String[] idArr = {"Arg1", "Arg2", "Arg3"};
     parse.addIdentifierArray(idArr);
     assertEquals("Arg3", parse.getIdendtifier(2));
@@ -83,7 +83,7 @@ public class ParserTest {
 
   @Test
   public void testHelpDefault() {
-    Parser parse = new Parser();
+    Parser parse = new Parser("Test");
     parse.addIdentifier("Arg1");
     parse.addIdentifier("Arg2");
     parse.addIdentifier("Arg3");
@@ -100,7 +100,7 @@ public class ParserTest {
   public void testAddIdWType() {
     String[] ID = {"arg1", "arg2", "arg3"};
     String[] Type = {"String", "float", "int"};
-    Parser parse = new Parser(ID, Type);
+    Parser parse = new Parser("Test", ID, Type);
     String[] arr = {"1", "2.2", "3"};
     parse.parseCommandLine(arr);
     String s = parse.getValue("arg1");

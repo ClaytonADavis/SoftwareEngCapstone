@@ -21,19 +21,23 @@ public class OverlappingRectangles {
   public static void main(String... args) {
     String[] idArray = {"x1", "y1", "x2", "y2", "x3", "y3", "x4", "y4"};
     String[] idType = {"int", "int", "int", "int", "int", "int", "int", "int"};
-    Parser parse = new Parser(idArray, idType);
+    Parser parse = new Parser("OverlappingRectangles", idArray, idType);
     try {
       parse.parseCommandLine(args);
     } catch (TooManyArgsException e) {
-      System.out.println("The Argument " + "is required");
+      return;
     } catch (NotEnoughArgsException e) {
-      System.out.println("the value " + "matches no argument");
+      return;
     } catch (HelpException e) {
       System.out.println();
     }
     int[] rectangles = new int[8];
     for (int i = 0; i < 8; i++) {
-      rectangles[i] = parse.getValue(idArray[i]);
+      try {
+        rectangles[i] = parse.getValue(idArray[i]);
+      } catch (IncorrectArgumentTypeException e) {
+        return;
+      }
     }
     OverlappingRectangles rectangleArea = new OverlappingRectangles();
     int intersectingArea = rectangleArea.getIntersectingArea(rectangles);
