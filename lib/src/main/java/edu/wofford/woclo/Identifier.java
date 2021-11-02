@@ -41,7 +41,7 @@ public class Identifier<T> {
       try {
         x = Integer.parseInt(data);
       } catch (NumberFormatException e) {
-        errMsge = "the value" + data + "is not of the type integer";
+        errMsge = "the value " + data + " is not of type integer";
         throw new IncorrectArgumentTypeException();
       }
       Integer X = Integer.valueOf(x);
@@ -51,7 +51,7 @@ public class Identifier<T> {
       try {
         f = Float.parseFloat(data);
       } catch (NumberFormatException e) {
-        errMsge = "the value" + data + "is not of the type" + type;
+        errMsge = "the value " + data + " is not of type" + type;
         throw new IncorrectArgumentTypeException();
       }
       Float F = Float.valueOf(f);
