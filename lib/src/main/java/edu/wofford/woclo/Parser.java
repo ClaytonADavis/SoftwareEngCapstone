@@ -11,6 +11,7 @@ public class Parser {
   /** The list of identifiers. */
   private List<Identifier> identifiers;
 
+  private List<Identifier> optional;
   private String progName;
   /** A private function that returns true if the command line contains a help flag. */
   private boolean getHelp(String[] argArr) {
@@ -22,9 +23,28 @@ public class Parser {
     return false;
   }
 
+  private String[] setOptionals(String[] command) {
+    int k = 0;
+    String[] noOpt = new String[identifiers.size()];
+    for (int i = 0; i < command.length; i++) {
+      for (int j = 0; j < optional.size(); j++) {
+        String s = "--" + optional.get(j).getName();
+        if (command[i].equals(s)) {
+          optional.get(j).addData(command[i + 1]);
+          i++;
+        } else {
+          noOpt[k] = command[i];
+          k++;
+        }
+      }
+    }
+    return noOpt;
+  }
+
   /** This is the constructer for the Parser class. It takes no arguments. */
   public Parser(String name) {
     identifiers = new ArrayList<Identifier>();
+    optional = new ArrayList<Identifier>();
     progName = name;
   }
 
@@ -45,6 +65,11 @@ public class Parser {
     identifiers.add(Iden);
   }
 
+  public void addIdentifier(String id, String Default) {
+    Identifier Iden = new Identifier(id, "String", Default);
+    optional.add(Iden);
+  }
+
   /** This method returns the Identifier at the given index. */
   public String getIdendtifier(int i) {
     return identifiers.get(i).getName();
@@ -61,6 +86,8 @@ public class Parser {
     if (getHelp(commandLine)) {
       throw new HelpException();
     }
+    String[] noOpt = setOptionals(commandLine);
+    commandLine = noOpt;
     if (commandLine.length < identifiers.size()) {
       System.out.println(
           progName
@@ -91,14 +118,26 @@ public class Parser {
     for (Identifier i : identifiers) {
       if (command.equals(i.getName())) {
         x = identifiers.indexOf(i);
+        try {
+          identifiers.get(x).getValue();
+        } catch (IncorrectArgumentTypeException e) {
+          System.out.println(progName + " error: " + identifiers.get(x).errorMessage());
+        }
+        return (T) identifiers.get(x).getValue();
       }
     }
-    try {
-      identifiers.get(x).getValue();
-    } catch (IncorrectArgumentTypeException e) {
-      System.out.println(progName + " error: " + identifiers.get(x).errorMessage());
+    for (Identifier i : optional) {
+      if (command.equals(i.getName())) {
+        x = optional.indexOf(i);
+        try {
+          optional.get(x).getValue();
+        } catch (IncorrectArgumentTypeException e) {
+          System.out.println(progName + " error: " + optional.get(x).errorMessage());
+        }
+        return (T) optional.get(x).getValue();
+      }
     }
-    return (T) identifiers.get(x).getValue();
+    return null;
   }
   /**
    * This method allows the user to pass an array of stings to be added to the end of the idenitifer

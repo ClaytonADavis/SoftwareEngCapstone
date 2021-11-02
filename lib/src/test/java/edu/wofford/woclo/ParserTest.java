@@ -110,4 +110,17 @@ public class ParserTest {
     assertTrue(Math.abs(f) > 0.00000001);
     assertEquals(3, i);
   }
+
+  @Test
+  public void testOptionalIden() {
+    Parser parse = new Parser("test");
+    parse.addIdentifier("arg1");
+    parse.addIdentifier("argopt", "12");
+    String[] command = {"5"};
+    parse.parseCommandLine(command);
+    assertEquals("12", parse.getValue("argopt"));
+    String[] command2 = {"5", "--argopt", "7"};
+    parse.parseCommandLine(command2);
+    assertEquals("7", parse.getValue("argopt"));
+  }
 }
