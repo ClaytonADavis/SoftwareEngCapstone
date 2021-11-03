@@ -76,15 +76,15 @@ public class WordSearch {
   }
 
   private String getPathString() {
-    String output = "";
+    StringBuffer output = new StringBuffer();
     int x, y;
     for (int i = 0; i < path.size(); i++) {
       x = path.get(i)[0];
       y = path.get(i)[1];
-      output += grid[x][y] + ":" + Integer.toString(x + 1) + "," + Integer.toString(y + 1);
-      if (i < path.size() - 1) output += " ";
+      output.append(grid[x][y] + ":" + Integer.toString(x + 1) + "," + Integer.toString(y + 1));
+      if (i < path.size() - 1) output.append(" ");
     }
-    return output;
+    return output.toString();
   }
 
   public static void main(String... args) {
