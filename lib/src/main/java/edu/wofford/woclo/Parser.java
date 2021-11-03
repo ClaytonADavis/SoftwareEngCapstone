@@ -11,7 +11,7 @@ public class Parser {
   /** The list of identifiers. */
   private List<Identifier> identifiers;
 
-  private List<Identifier> optional;
+  private Map<String, Identifier> optional;
   private String progName;
   /** A private function that returns true if the command line contains a help flag. */
   private boolean getHelp(String[] argArr) {
@@ -24,27 +24,26 @@ public class Parser {
   }
 
   private String[] setOptionals(String[] command) {
-    int k = 0;
-    String[] noOpt = new String[identifiers.size()];
+    List<String> noOpt = new ArrayList<String>();
     for (int i = 0; i < command.length; i++) {
-      for (int j = 0; j < optional.size(); j++) {
-        String s = "--" + optional.get(j).getName();
-        if (command[i].equals(s)) {
-          optional.get(j).addData(command[i + 1]);
-          i++;
-        } else {
-          noOpt[k] = command[i];
-          k++;
-        }
+      if (optional.containsKey(command[i])) {
+        optional.get(command[i]).addData(command[i + 1]);
+        i++;
+      } else {
+        noOpt.add(command[i]);
       }
     }
-    return noOpt;
+    String[] temp = new String[noOpt.size()];
+    for (int i = 0; i < noOpt.size(); i++) {
+      temp[i] = noOpt.get(i);
+    }
+    return temp;
   }
 
   /** This is the constructer for the Parser class. It takes no arguments. */
   public Parser(String name) {
     identifiers = new ArrayList<Identifier>();
-    optional = new ArrayList<Identifier>();
+    optional = new HashMap<String, Identifier>();
     progName = name;
   }
 
@@ -67,7 +66,8 @@ public class Parser {
 
   public void addIdentifier(String id, String Default) {
     Identifier Iden = new Identifier(id, "String", Default);
-    optional.add(Iden);
+    String name = "--" + id;
+    optional.put(name, Iden);
   }
 
   /** This method returns the Identifier at the given index. */
@@ -115,26 +115,19 @@ public class Parser {
    */
   public <T> T getValue(String command) {
     int x = 0;
-    for (Identifier i : identifiers) {
-      if (command.equals(i.getName())) {
-        x = identifiers.indexOf(i);
-        try {
-          identifiers.get(x).getValue();
-        } catch (IncorrectArgumentTypeException e) {
-          System.out.println(progName + " error: " + identifiers.get(x).errorMessage());
+    if (optional.containsKey("--" + command)) {
+      return (T) optional.get("--" + command).getValue();
+    } else {
+      for (Identifier i : identifiers) {
+        if (command.equals(i.getName())) {
+          x = identifiers.indexOf(i);
+          try {
+            identifiers.get(x).getValue();
+          } catch (IncorrectArgumentTypeException e) {
+            System.out.println(progName + " error: " + identifiers.get(x).errorMessage());
+          }
+          return (T) identifiers.get(x).getValue();
         }
-        return (T) identifiers.get(x).getValue();
-      }
-    }
-    for (Identifier i : optional) {
-      if (command.equals(i.getName())) {
-        x = optional.indexOf(i);
-        try {
-          optional.get(x).getValue();
-        } catch (IncorrectArgumentTypeException e) {
-          System.out.println(progName + " error: " + optional.get(x).errorMessage());
-        }
-        return (T) optional.get(x).getValue();
       }
     }
     return null;
