@@ -115,7 +115,7 @@ public class ParserTest {
   public void testOptionalIden() {
     Parser parse = new Parser("test");
     parse.addIdentifier("arg1");
-    parse.addIdentifier("argopt", "12");
+    parse.addIdentifier("argopt","String", "12");
     String[] command = {"5"};
     parse.parseCommandLine(command);
     assertEquals("12", parse.getValue("argopt"));
