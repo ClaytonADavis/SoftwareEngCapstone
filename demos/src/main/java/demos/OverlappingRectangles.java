@@ -29,7 +29,9 @@ public class OverlappingRectangles {
     } catch (NotEnoughArgsException e) {
       return;
     } catch (HelpException e) {
-      System.out.println();
+      System.out.println(
+          "usage: java OverlappingRectangles [-h] x1 y1 x2 y2 x3 y3 x4 y4\n\nDetermine the overlap and total area of two rectangles.\n\npositional arguments:\n x1          (integer)     lower-left x for rectangle 1\n y1          (integer)     lower-left y for rectangle 1\n x2          (integer)     upper-right x for rectangle 1\n y2          (integer)     upper-right y for rectangle 1\n x3          (integer)     lower-left x for rectangle 2\n y3          (integer)     lower-left y for rectangle 2\n x4          (integer)     upper-right x for rectangle 2\n y4          (integer)     upper-right y for rectangle 2\n\nnamed arguments:\n -h, --help  show this help message and exit");
+      return;
     }
     int[] rectangles = new int[8];
     for (int i = 0; i < 8; i++) {
