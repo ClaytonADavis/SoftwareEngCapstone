@@ -64,8 +64,8 @@ public class Parser {
     identifiers.add(Iden);
   }
 
-  public void addIdentifier(String id, String Default) {
-    Identifier Iden = new Identifier(id, "String", Default);
+  public void addIdentifier(String id,String type, String Default) {
+    Identifier Iden = new Identifier(id, type, Default);
     String name = "--" + id;
     optional.put(name, Iden);
   }
