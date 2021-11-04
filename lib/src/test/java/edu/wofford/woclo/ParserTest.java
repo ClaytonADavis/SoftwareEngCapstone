@@ -123,4 +123,17 @@ public class ParserTest {
     parse.parseCommandLine(command2);
     assertEquals("7", parse.getValue("argopt"));
   }
+
+  public void testOptInMiddle() {
+    Parser parse = new Parser("test");
+    parse.addIdentifier("arg1");
+    parse.addIdentifier("arg2");
+    parse.addIdentifier("argopt", "String", "12");
+    String[] command = {"5"};
+    parse.parseCommandLine(command);
+    assertEquals("12", parse.getValue("argopt"));
+    String[] command2 = {"5", "--argopt", "7", "6"};
+    parse.parseCommandLine(command2);
+    assertEquals("7", parse.getValue("argopt"));
+  }
 }
