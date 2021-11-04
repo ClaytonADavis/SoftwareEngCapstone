@@ -61,9 +61,5 @@ class WordSearchTest {
     assertEquals("altyoyerkowsoftb not found", test.findWord("altyoyerkowsoftb"));
   }
 
-  @Test
-  void testFindWord5() {
-    WordSearch test = new WordSearch("softwaeskqermilvcqputeromocertpuiopprogram", 6, 7);
-    assertEquals("c:5,3 o:5,2 m:5,1 p:4,1 u:4,2 t:4,3 e:4,4 r:4,5", test.findWord("computer"));
-  }
+
 }
