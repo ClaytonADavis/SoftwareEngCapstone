@@ -102,11 +102,23 @@ public class WordSearch {
     } catch (HelpException e) {
       System.out.println("change later");
       return;
+    } catch (IncorrectArgumentTypeException e) {
+      return;
+    } catch (MissingArgumentException e) {
+      return;
     }
-    String grid = parse.getValue("grid");
-    String target = parse.getValue("target");
-    int width = parse.getValue("width");
-    int height = parse.getValue("height");
+    String grid = "";
+    String target = "";
+    int width = 0;
+    int height = 0;
+    try {
+      grid = parse.getValue("grid");
+      target = parse.getValue("target");
+      width = parse.getValue("width");
+      height = parse.getValue("height");
+    } catch (IncorrectArgumentTypeException e) {
+      return;
+    }
     // TODO implement parser library to set gridString, word, width, and height based off of values
     // pulled from command line
 
