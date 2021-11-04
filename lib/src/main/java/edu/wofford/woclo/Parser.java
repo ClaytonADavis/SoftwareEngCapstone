@@ -27,7 +27,9 @@ public class Parser {
     List<String> noOpt = new ArrayList<String>();
     for (int i = 0; i < command.length; i++) {
       if (optional.containsKey(command[i])) {
-        optional.get(command[i]).addData(command[i + 1]);
+        Identifier temp = optional.get(command[i]);
+        temp.addData(command[i + 1]);
+        optional.replace(command[i], temp);
         i++;
       } else {
         noOpt.add(command[i]);
@@ -64,7 +66,7 @@ public class Parser {
     identifiers.add(Iden);
   }
 
-  public void addIdentifier(String id,String type, String Default) {
+  public void addIdentifier(String id, String type, String Default) {
     Identifier Iden = new Identifier(id, type, Default);
     String name = "--" + id;
     optional.put(name, Iden);
