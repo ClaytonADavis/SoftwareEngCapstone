@@ -93,22 +93,21 @@ public class WordSearch {
     Parser parse = new Parser("WordSearch", idArray, idType);
     parse.addIdentifier("width", "int", "5");
     parse.addIdentifier("height", "int", "5");
-    String gridString = "softsweskaolzilklqmtreyoy";
-    String word = "eskimo";
-    int width = 5;
-    int height = 5;
-        try {
+
+    try {
       parse.parseCommandLine(args);
     } catch (TooManyArgsException e) {
       return;
     } catch (NotEnoughArgsException e) {
       return;
     } catch (HelpException e) {
-      System.out.println(
-          "change later");
+      System.out.println("change later");
       return;
     }
-
+    String gridString = parse.getValue("gridString");
+    String word = parse.getValue("word");
+    int width = parse.getValue("width");
+    int height = parse.getValue("height");
     // TODO implement parser library to set gridString, word, width, and height based off of values
     // pulled from command line
 
