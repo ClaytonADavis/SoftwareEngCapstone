@@ -60,4 +60,6 @@ class WordSearchTest {
     WordSearch test = new WordSearch("softsweskaolzilklqmtreyoy");
     assertEquals("altyoyerkowsoftb not found", test.findWord("altyoyerkowsoftb"));
   }
+
+
 }
