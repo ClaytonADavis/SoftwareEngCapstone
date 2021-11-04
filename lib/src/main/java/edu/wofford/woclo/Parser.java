@@ -38,6 +38,9 @@ public class Parser {
         } catch (IncorrectArgumentTypeException e) {
           String[] temp1 = new String[0];
           return temp1;
+        } catch (ArrayIndexOutOfBoundsException e) {
+          System.out.println(
+              progName + " error: no value for " + optional.get(command[i]).getName());
         }
         optional.replace(command[i], temp);
         i++;
