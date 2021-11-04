@@ -97,15 +97,14 @@ public class WordSearch {
     String word = "eskimo";
     int width = 5;
     int height = 5;
-        try {
+    try {
       parse.parseCommandLine(args);
     } catch (TooManyArgsException e) {
       return;
     } catch (NotEnoughArgsException e) {
       return;
     } catch (HelpException e) {
-      System.out.println(
-          "change later");
+      System.out.println("change later");
       return;
     }
 

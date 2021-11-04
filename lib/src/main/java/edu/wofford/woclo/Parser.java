@@ -4,14 +4,16 @@ import java.util.*;
 
 /**
  * This class takes and array of command line arguments and maps them to a list of identifiers
- * provided by the user. It allows the user to request arguments by specific identifiers. It also
- * recognizes when a help flag is in the arguments.
+ * provided by the user. It allows the user to request arguments by specific identifiers. It allows
+ * for the user to have optional identifiers set to default values. It also recognizes when a help
+ * flag is in the arguments.
  */
 public class Parser {
   /** The list of identifiers. */
   private List<Identifier> identifiers;
-
+  /** A map relating optional Identifiers to their vlaues. */
   private Map<String, Identifier> optional;
+  /** The name of the program using the parser class */
   private String progName;
   /** A private function that returns true if the command line contains a help flag. */
   private boolean getHelp(String[] argArr) {
@@ -22,13 +24,21 @@ public class Parser {
     }
     return false;
   }
-
+  /**
+   * A private function that searches through the command line and removes the optional argumanets.
+   * It returns an array only containing the positional arguments.
+   */
   private String[] setOptionals(String[] command) {
     List<String> noOpt = new ArrayList<String>();
     for (int i = 0; i < command.length; i++) {
       if (optional.containsKey(command[i])) {
         Identifier temp = optional.get(command[i]);
-        temp.addData(command[i + 1]);
+        try {
+          temp.addData(command[i + 1]);
+        } catch (IncorrectArgumentTypeException e) {
+          String[] temp1 = new String[0];
+          return temp1;
+        }
         optional.replace(command[i], temp);
         i++;
       } else {
@@ -42,13 +52,19 @@ public class Parser {
     return temp;
   }
 
-  /** This is the constructer for the Parser class. It takes no arguments. */
+  /**
+   * This is the constructer for the Parser class. It takes the name of the function using parser as
+   * an argument.
+   */
   public Parser(String name) {
     identifiers = new ArrayList<Identifier>();
     optional = new HashMap<String, Identifier>();
     progName = name;
   }
-
+  /**
+   * A constructer for the Parser class that takes the name of the fucntion, an array of identifier
+   * names, and an array of their associtaed types.
+   */
   public Parser(String name, String[] idArray, String[] typeArray) {
     this(name);
     for (int i = 0; i < idArray.length; i++) {
@@ -65,7 +81,10 @@ public class Parser {
     Identifier Iden = new Identifier(id, "String", "");
     identifiers.add(Iden);
   }
-
+  /**
+   * A method that takes an optional identifier and its associtated type, with the default value for
+   * the identifier
+   */
   public void addIdentifier(String id, String type, String Default) {
     Identifier Iden = new Identifier(id, type, Default);
     String name = "--" + id;
@@ -108,7 +127,12 @@ public class Parser {
     }
     int size = commandLine.length;
     for (int i = 0; i < size; i++) {
-      identifiers.get(i).addData(commandLine[i]);
+      try {
+        identifiers.get(i).addData(commandLine[i]);
+      } catch (IncorrectArgumentTypeException e) {
+
+        return;
+      }
     }
   }
   /**
