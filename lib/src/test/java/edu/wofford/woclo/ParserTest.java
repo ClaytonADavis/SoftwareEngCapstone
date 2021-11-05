@@ -124,16 +124,36 @@ public class ParserTest {
     assertEquals("7", parse.getValue("argopt"));
   }
 
+  @Test
   public void testOptInMiddle() {
     Parser parse = new Parser("test");
     parse.addIdentifier("arg1");
     parse.addIdentifier("arg2");
     parse.addIdentifier("argopt", "String", "12");
-    String[] command = {"5"};
+    String[] command = {"5", "7"};
     parse.parseCommandLine(command);
     assertEquals("12", parse.getValue("argopt"));
     String[] command2 = {"5", "--argopt", "7", "6"};
     parse.parseCommandLine(command2);
     assertEquals("7", parse.getValue("argopt"));
+  }
+
+  @Test
+  public void testMissingOptionalValues() {
+    Parser parse = new Parser("test");
+    parse.addIdentifier("arg1");
+    parse.addIdentifier("arg2");
+    parse.addIdentifier("argopt", "String", "12");
+    String[] command = {"5", "7"};
+    parse.parseCommandLine(command);
+    assertEquals("12", parse.getValue("argopt"));
+    String[] command2 = {"5", "7", "--argopt"};
+    try {
+      parse.parseCommandLine(command2);
+    } catch (MissingArgumentException e) {
+      assert (true);
+      return;
+    }
+    assert (false);
   }
 }
