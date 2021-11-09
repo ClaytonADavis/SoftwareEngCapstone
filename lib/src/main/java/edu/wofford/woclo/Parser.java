@@ -129,12 +129,11 @@ public class Parser {
               + " matches no argument.");
       throw new TooManyArgsException();
     }
-    int size = commandLine.length;
-    for (Map.Entry<String, String> entry : ids.entrySet()) {
-      ids.replace(entry.getKey(), )
-    }
+
+    String key = "";
     for (int i = 0; i < size; i++) {
-      identifiers.get(i).addData(commandLine[i]);
+      key = identifierNames.get(i); 
+      ids.replace(key, ids.get(key).addData(commandLine[i]));
     }
   }
   /**
