@@ -9,9 +9,9 @@ import java.util.*;
  */
 public class Parser {
   /** The list of identifiers. */
-  private List<Identifier> identifiers;
-
-  private Map<String, Identifier> optional;
+  private ArrayList<String> identifierNames;
+  private HashMap<String, Identifier> ids;
+  private HashMap<String, Identifier> optional;
   private String progName;
   /** A private function that returns true if the command line contains a help flag. */
   private boolean getHelp(String[] argArr) {
@@ -35,10 +35,7 @@ public class Parser {
           throw new MissingArgumentException();
         }
         String s = optional.get(command[i]).getType();
-        if (s.equals("String")) {
-
-        } else if (s.equals("int")) {
-
+        if (s.equals("int")) {
           try {
             int x = (int) optional.get(command[i]).getValue();
           } catch (IncorrectArgumentTypeException e) {
@@ -68,17 +65,10 @@ public class Parser {
 
   /** This is the constructer for the Parser class. It takes no arguments. */
   public Parser(String name) {
-    identifiers = new ArrayList<Identifier>();
+    identifierNames = new ArrayList<String>();
+    ids = new HashMap<String, Identifier>();
     optional = new HashMap<String, Identifier>();
     progName = name;
-  }
-
-  public Parser(String name, String[] idArray, String[] typeArray) {
-    this(name);
-    for (int i = 0; i < idArray.length; i++) {
-      Identifier id = new Identifier(idArray[i], typeArray[i], "");
-      identifiers.add(id);
-    }
   }
 
   /**
@@ -87,23 +77,27 @@ public class Parser {
    */
   public void addIdentifier(String id) {
     Identifier Iden = new Identifier(id, "String", "");
-    identifiers.add(Iden);
+    ids.put(id, Iden);
+    identifierNames.add(id);
   }
 
-  public void addIdentifier(String id, String type, String Default) {
+  public void addIdentifier(String id, String type) {
+    Identifier Iden = new Identifier(id, type, "");
+    ids.put(id, Iden);
+    identifierNames.add(id);
+  }
+
+  public void addOptionalIdentifier(String id) {
+    Identifier Iden = new Identifier(id, "Boolean", "false");
+    optional.put("--" + id, Iden);
+  }
+
+  public void addOptionalIdentifier(String id, String type, String Default) {
     Identifier Iden = new Identifier(id, type, Default);
-    String name = "--" + id;
-    optional.put(name, Iden);
+    optional.put("--" + id, Iden);
   }
 
-  /** This method returns the Identifier at the given index. */
-  public String getIdendtifier(int i) {
-    return identifiers.get(i).getName();
-  }
-  /** This method adds the given identifier to the list at the given index. */
-  public void addIdentifierAtIndex(String id, int i) {
-    identifiers.add(i, new Identifier(id, "String", ""));
-  }
+
   /**
    * This method takes an array of strings and maps them in order to the idenifier array. It also
    * checks if there is a help flag and throws an execption if one is present.
@@ -119,7 +113,7 @@ public class Parser {
       throw new MissingArgumentException();
     }
     commandLine = noOpt;
-    if (commandLine.length < identifiers.size()) {
+    if (commandLine.length < ids.size()) {
       System.out.println(
           progName
               + " error: the argument "
@@ -127,15 +121,18 @@ public class Parser {
               + " is required.");
       throw new NotEnoughArgsException();
     }
-    if (commandLine.length > identifiers.size()) {
+    if (commandLine.length > ids.size()) {
       System.out.println(
           progName
               + " error: the value "
-              + commandLine[identifiers.size()]
+              + commandLine[ids.size()]
               + " matches no argument.");
       throw new TooManyArgsException();
     }
     int size = commandLine.length;
+    for (Map.Entry<String, String> entry : ids.entrySet()) {
+      ids.replace(entry.getKey(), )
+    }
     for (int i = 0; i < size; i++) {
       identifiers.get(i).addData(commandLine[i]);
     }
