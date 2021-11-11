@@ -117,7 +117,7 @@ public class Parser {
       System.out.println(
           progName
               + " error: the argument "
-              + identifiers.get(commandLine.length).getName()
+              + identifierNames.get(commandLine.length).getName()
               + " is required.");
       throw new NotEnoughArgsException();
     }
@@ -145,27 +145,13 @@ public class Parser {
     if (optional.containsKey("--" + command)) {
       return (T) optional.get("--" + command).getValue();
     } else {
-      for (Identifier i : identifiers) {
-        if (command.equals(i.getName())) {
-          x = identifiers.indexOf(i);
-          try {
-            identifiers.get(x).getValue();
-          } catch (IncorrectArgumentTypeException e) {
-            System.out.println(progName + " error: " + identifiers.get(x).errorMessage());
-          }
-          return (T) identifiers.get(x).getValue();
-        }
+      try {
+        ids.get(x).getValue();
+      } catch (IncorrectArgumentTypeException e) {
+        System.out.println(progName + " error: " + ids.get(x).errorMessage());
       }
+      return (T) identifiers.get(x).getValue();
     }
     return null;
-  }
-  /**
-   * This method allows the user to pass an array of stings to be added to the end of the idenitifer
-   * list.
-   */
-  public void addIdentifierArray(String[] idArr) {
-    for (String s : idArr) {
-      identifiers.add(new Identifier(s, "String", ""));
-    }
   }
 }
