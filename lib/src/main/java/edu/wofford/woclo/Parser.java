@@ -56,6 +56,7 @@ public class Parser {
         noOpt.add(command[i]);
       }
     }
+
     String[] temp = new String[noOpt.size()];
     for (int i = 0; i < noOpt.size(); i++) {
       temp[i] = noOpt.get(i);
@@ -131,7 +132,7 @@ public class Parser {
     }
 
     String key = "";
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < commandLine.length(); i++) {
       key = identifierNames.get(i); 
       ids.replace(key, ids.get(key).addData(commandLine[i]));
     }
