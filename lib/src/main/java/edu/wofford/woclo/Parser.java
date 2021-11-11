@@ -140,16 +140,15 @@ public class Parser {
    * string.
    */
   public <T> T getValue(String command) {
-    int x = 0;
     if (optional.containsKey("--" + command)) {
       return (T) optional.get("--" + command).getValue();
     } else {
       try {
-        ids.get(x).getValue();
+        ids.get(command).getValue();
       } catch (IncorrectArgumentTypeException e) {
-        System.out.println(progName + " error: " + ids.get(x).errorMessage());
+        System.out.println(progName + " error: " + ids.get(command).errorMessage());
       }
-      return (T) ids.get(x).getValue();
+      return (T) ids.get(command).getValue();
     }
   }
 }
