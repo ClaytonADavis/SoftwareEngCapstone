@@ -21,7 +21,11 @@ public class OverlappingRectangles {
   public static void main(String... args) {
     String[] idArray = {"x1", "y1", "x2", "y2", "x3", "y3", "x4", "y4"};
     String[] idType = {"int", "int", "int", "int", "int", "int", "int", "int"};
-    Parser parse = new Parser("OverlappingRectangles", idArray, idType);
+
+    Parser parse = new Parser("OverlappingRectangles");
+    for (int i = 0; i < idArray.length; i++) {
+      parse.addIdentifier(idArray[i], idType[i]);
+    }
     try {
       parse.parseCommandLine(args);
     } catch (TooManyArgsException e) {

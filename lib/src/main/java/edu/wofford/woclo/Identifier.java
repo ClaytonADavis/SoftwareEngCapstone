@@ -61,7 +61,7 @@ public class Identifier<T> {
       Float F = Float.valueOf(f);
       return (T) F;
     } else if (type.equals("boolean")) {
-      return data.equals("true");
+      return (T) Boolean.valueOf(data.equals("true"));
     } else {
       throw new InvalidTypeException();
     }

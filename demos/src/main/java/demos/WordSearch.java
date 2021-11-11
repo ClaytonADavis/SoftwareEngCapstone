@@ -106,9 +106,11 @@ public class WordSearch {
   public static void main(String... args) {
     String[] idArray = {"grid", "target"};
     String[] idType = {"String", "String"};
-    Parser parse = new Parser("WordSearch", idArray, idType);
-    parse.addIdentifier("width", "int", "5");
-    parse.addIdentifier("height", "int", "5");
+    Parser parse = new Parser("WordSearch");
+    parse.addIdentifier("grid");
+    parse.addIdentifier("target");
+    parse.addOptionalIdentifier("width", "int", "5");
+    parse.addOptionalIdentifier("height", "int", "5");
     try {
       parse.parseCommandLine(args);
     } catch (TooManyArgsException e) {
@@ -116,8 +118,7 @@ public class WordSearch {
     } catch (NotEnoughArgsException e) {
       return;
     } catch (HelpException e) {
-      System.out.println(
-          "usage: java WordSearch [-h] [--width WIDTH] [--height HEIGHT] grid target\n\nFind a target word in a grid.\n\npositional arguments:\n grid             (string)      the grid to search\n target           (string)      the target word\n\nnamed arguments:\n -h, --help       show this help message and exit\n --width WIDTH    (integer)     the grid width (default: 5)\n --height HEIGHT  (integer)     the grid height (default: 5)");
+      System.out.println("change later");
       return;
     } catch (MissingArgumentException e) {
       return;
@@ -133,16 +134,6 @@ public class WordSearch {
       height = parse.getValue("height");
     } catch (IncorrectArgumentTypeException e) {
       return;
-    }
-    if ((width * height) != grid.length()) {
-      System.out.println(
-          "WordSearch error: grid dimensions ("
-              + width
-              + " x "
-              + height
-              + ") do not match grid length ("
-              + grid.length()
-              + ")");
     }
     // TODO implement parser library to set gridString, word, width, and height based off of values
     // pulled from command line
@@ -171,10 +162,6 @@ public class WordSearch {
         p1.add(p2.get(p2.size() - i - 1));
       }
       System.out.println(test.getPathString2(p1));
-    } else if (p1.size() > 0 && p2.size() == 0) {
-      System.out.println(test.getPathString2(p1));
-    } else if (p1.size() == 0 && p2.size() == 0) {
-      System.out.println(target + " not found");
     } else {
 
       int s = p1.size();

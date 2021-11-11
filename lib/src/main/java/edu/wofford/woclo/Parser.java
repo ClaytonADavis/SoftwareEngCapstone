@@ -10,6 +10,7 @@ import java.util.*;
 public class Parser {
   /** The list of identifiers. */
   private ArrayList<String> identifierNames;
+
   private HashMap<String, Identifier> ids;
   private HashMap<String, Identifier> optional;
   private String progName;
@@ -56,7 +57,6 @@ public class Parser {
         noOpt.add(command[i]);
       }
     }
-
     String[] temp = new String[noOpt.size()];
     for (int i = 0; i < noOpt.size(); i++) {
       temp[i] = noOpt.get(i);
@@ -98,7 +98,6 @@ public class Parser {
     optional.put("--" + id, Iden);
   }
 
-
   /**
    * This method takes an array of strings and maps them in order to the idenifier array. It also
    * checks if there is a help flag and throws an execption if one is present.
@@ -118,23 +117,22 @@ public class Parser {
       System.out.println(
           progName
               + " error: the argument "
-              + identifierNames.get(commandLine.length).getName()
+              + identifierNames.get(commandLine.length)
               + " is required.");
       throw new NotEnoughArgsException();
     }
     if (commandLine.length > ids.size()) {
       System.out.println(
-          progName
-              + " error: the value "
-              + commandLine[ids.size()]
-              + " matches no argument.");
+          progName + " error: the value " + commandLine[ids.size()] + " matches no argument.");
       throw new TooManyArgsException();
     }
 
     String key = "";
-    for (int i = 0; i < commandLine.length(); i++) {
-      key = identifierNames.get(i); 
-      ids.replace(key, ids.get(key).addData(commandLine[i]));
+    for (int i = 0; i < commandLine.length; i++) {
+      key = identifierNames.get(i);
+      Identifier t = ids.get(key);
+      t.addData(commandLine[i]);
+      ids.replace(key, t);
     }
   }
   /**
@@ -151,8 +149,7 @@ public class Parser {
       } catch (IncorrectArgumentTypeException e) {
         System.out.println(progName + " error: " + ids.get(x).errorMessage());
       }
-      return (T) identifiers.get(x).getValue();
+      return (T) ids.get(x).getValue();
     }
-    return null;
   }
 }

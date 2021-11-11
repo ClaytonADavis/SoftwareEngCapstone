@@ -9,17 +9,9 @@ public class ParserTest {
   public void testAddIdentifier() {
     Parser parse = new Parser("Test");
     parse.addIdentifier("Arg1");
-    assertEquals("Arg1", parse.getIdendtifier(0));
-  }
-
-  @Test
-  public void testAddIdentifierAtIndex() {
-    Parser parse = new Parser("Test");
-    parse.addIdentifier("Arg1");
-    parse.addIdentifier("Args2");
-    parse.addIdentifier("Args3");
-    parse.addIdentifierAtIndex("Args4", 1);
-    assertEquals("Args4", parse.getIdendtifier(1));
+    String[] test = {"1"};
+    parse.parseCommandLine(test);
+    assertEquals("1", parse.getValue("Arg1"));
   }
 
   @Test
@@ -74,14 +66,6 @@ public class ParserTest {
   }
 
   @Test
-  public void testAddIdentifierArray() {
-    Parser parse = new Parser("Test");
-    String[] idArr = {"Arg1", "Arg2", "Arg3"};
-    parse.addIdentifierArray(idArr);
-    assertEquals("Arg3", parse.getIdendtifier(2));
-  }
-
-  @Test
   public void testHelpDefault() {
     Parser parse = new Parser("Test");
     parse.addIdentifier("Arg1");
@@ -98,10 +82,11 @@ public class ParserTest {
 
   @Test
   public void testAddIdWType() {
-    String[] ID = {"arg1", "arg2", "arg3"};
-    String[] Type = {"String", "float", "int"};
-    Parser parse = new Parser("Test", ID, Type);
+    Parser parse = new Parser("Test");
     String[] arr = {"1", "2.2", "3"};
+    parse.addIdentifier("arg1", "String");
+    parse.addIdentifier("arg2", "float");
+    parse.addIdentifier("arg3", "int");
     parse.parseCommandLine(arr);
     String s = parse.getValue("arg1");
     float f = parse.getValue("arg2");
@@ -115,7 +100,7 @@ public class ParserTest {
   public void testOptionalIden() {
     Parser parse = new Parser("test");
     parse.addIdentifier("arg1");
-    parse.addIdentifier("argopt", "String", "12");
+    parse.addOptionalIdentifier("argopt", "String", "12");
     String[] command = {"5"};
     parse.parseCommandLine(command);
     assertEquals("12", parse.getValue("argopt"));
@@ -129,7 +114,7 @@ public class ParserTest {
     Parser parse = new Parser("test");
     parse.addIdentifier("arg1");
     parse.addIdentifier("arg2");
-    parse.addIdentifier("argopt", "String", "12");
+    parse.addOptionalIdentifier("argopt", "String", "12");
     String[] command = {"5", "7"};
     parse.parseCommandLine(command);
     assertEquals("12", parse.getValue("argopt"));
@@ -143,7 +128,7 @@ public class ParserTest {
     Parser parse = new Parser("test");
     parse.addIdentifier("arg1");
     parse.addIdentifier("arg2");
-    parse.addIdentifier("argopt", "String", "12");
+    parse.addOptionalIdentifier("argopt", "String", "12");
     String[] command = {"5", "7"};
     parse.parseCommandLine(command);
     assertEquals("12", parse.getValue("argopt"));
