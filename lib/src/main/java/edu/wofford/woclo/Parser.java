@@ -10,10 +10,12 @@ import java.util.*;
 public class Parser {
   /** The list of identifiers. */
   private ArrayList<String> identifierNames;
-
+  private ArrayList<String> optionalIdentifierNames;
   private HashMap<String, Identifier> ids;
   private HashMap<String, Identifier> optional;
   private String progName;
+  private String helpMsg;
+  private String usage;
   /** A private function that returns true if the command line contains a help flag. */
   private boolean getHelp(String[] argArr) {
     for (String s : argArr) {
@@ -22,6 +24,69 @@ public class Parser {
       }
     }
     return false;
+  }
+
+  public String getHelpMessage() {
+    return helpMsg;
+  }
+
+  private void constructHelpMsg() {
+      helpMsg += " [-h]";
+      //add optionals to helpMsg
+      for (String opIdName : optionalIdentifierNames) { 
+        helpMsg += " [--" + opIdName;
+        if (optional.get(opIdName).getType() != "boolean") helpMsg += " " + opIdName.toUpperCase();
+        helpMsg += "]";
+      }
+      //add positionals to helpMsg
+      for (String idName : identifierNames) helpMsg += " " + idName;
+      //add usage
+      helpMsg += "\n\n" + usage;
+      //determine how much whitespace needed
+      int maxArgLength = "-h, --help".length();
+      for (String idName : identifierNames) maxArgLength = max(maxArgLength, idName.length());
+      for (String idName : optionalIdentifierNames) {
+        //if named arg not boolean include uppercase name in length calculation
+        if (optional.get(opIdName).getType() != "boolean") {
+           maxArgLength = max(maxArgLength, ("--" + idName + opIdName.toUpperCase()).length());
+        } else {
+          maxArgLength = max(maxArgLength, ("--" + idName).length());
+        }
+      }
+
+      //add positional descriptions
+      helpMsg += "\n\n positional arguements:";
+      for (String idName : identifierNames) {
+        //add argname
+        helpMsg += "\n " + idName;
+        //add whitespace
+        for (int i=0; i<maxArgLength - idName.length() + 2; i++) helpMsg += " ";
+        //add type
+        helpMsg += "(" + ids.get(idName).getType() + ")"
+        //add whitespace (16 = number of chars between start of type and description)
+        for (int i=0; i<12 - ids.get(idName).getType().length(); i++) helpMsg += " ";
+        //add description
+        helpMsg += ids.get(idName).getDescription();
+      }
+      //add named arguements
+      helpMsg += "\n\n named arguements:\n -h, --help";
+      for (int i=0; i<maxArgLength - idName.length() + 2; i++) helpMsg += " ";
+      for (String idName : optionalIdentifierNames) {
+        //add argname
+        if (optional.get(idName).getType() != "boolean") {
+          helpMsg += "\n --" + idName + idName.toUpperCase();
+        } else {
+          helpMsg += "\n --" + idName;
+        }
+        //add whitespace
+        for (int i=0; i<maxArgLength - idName.length() + 2; i++) helpMsg += " ";
+        //add type
+        helpMsg += "(" + optional.get(idName).getType() + ")"
+        //add whitespace (16 = number of chars between start of type and description)
+        for (int i=0; i<12 - optional.get(idName).getType().length(); i++) helpMsg += " ";
+        //add description
+        helpMsg += optional.get(idName).getDescription();
+      }
   }
 
   private String[] setOptionals(String[] command) {
@@ -36,7 +101,7 @@ public class Parser {
           throw new MissingArgumentException();
         }
         String s = optional.get(command[i]).getType();
-        if (s.equals("int")) {
+        if (s.equals("integer")) {
           try {
             int x = (int) optional.get(command[i]).getValue();
           } catch (IncorrectArgumentTypeException e) {
@@ -65,37 +130,42 @@ public class Parser {
   }
 
   /** This is the constructer for the Parser class. It takes no arguments. */
-  public Parser(String name) {
+  public Parser(String name, String usage) {
     identifierNames = new ArrayList<String>();
+    optionalIdentifierNames = new ArrayList<String>();
     ids = new HashMap<String, Identifier>();
     optional = new HashMap<String, Identifier>();
     progName = name;
+    helpMsg = "usage: " + name;
+    this.usage = usage;
   }
 
   /**
    * This method adds an Identifier to the end of the Identifier list. It takes the Identifier as a
    * string and retuns void.
    */
-  public void addIdentifier(String id) {
-    Identifier Iden = new Identifier(id, "String", "");
+  public void addIdentifier(String id, String description) {
+    Identifier Iden = new Identifier(id, "String", "", description);
     ids.put(id, Iden);
     identifierNames.add(id);
   }
 
-  public void addIdentifier(String id, String type) {
-    Identifier Iden = new Identifier(id, type, "");
+  public void addIdentifier(String id, String description, String type) {
+    Identifier Iden = new Identifier(id, type, "", description);
     ids.put(id, Iden);
     identifierNames.add(id);
   }
 
-  public void addOptionalIdentifier(String id) {
-    Identifier Iden = new Identifier(id, "Boolean", "false");
+  public void addOptionalIdentifier(String id, String description) {
+    Identifier Iden = new Identifier(id, "Boolean", "false", description);
     optional.put("--" + id, Iden);
+    optionalIdentifierNames.add(id);
   }
 
-  public void addOptionalIdentifier(String id, String type, String Default) {
-    Identifier Iden = new Identifier(id, type, Default);
+  public void addOptionalIdentifier(String id, String description, String type, String Default) {
+    Identifier Iden = new Identifier(id, type, Default, description);
     optional.put("--" + id, Iden);
+    optionalIdentifierNames.add(id);
   }
 
   /**
@@ -104,6 +174,7 @@ public class Parser {
    */
   public void parseCommandLine(String[] commandLine) {
     if (getHelp(commandLine)) {
+      constructHelpMsg();
       throw new HelpException();
     }
     String[] noOpt = new String[commandLine.length];

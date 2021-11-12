@@ -3,21 +3,24 @@ package edu.wofford.woclo;
 public class Identifier<T> {
 
   private String name;
-  private String data;
   private String type;
+  private String data;
+  private String description;
   private String errMsge;
 
   public Identifier() {
     name = "";
     type = "";
     data = "";
+    description = "";
     errMsge = "";
   }
 
-  public Identifier(String name, String type, String data) {
+  public Identifier(String name, String type, String data, String description) {
     this.name = name;
     this.type = type;
     this.data = data;
+    this.description = description;
     errMsge = "";
   }
 
@@ -25,22 +28,18 @@ public class Identifier<T> {
     return name;
   }
 
-  public void addData(String data) {
-    this.data = data;
-  }
-
-  public String errorMessage() {
-    return errMsge;
-  }
-
   public String getType() {
     return type;
+  }
+
+  public void addData(String data) {
+    this.data = data;
   }
 
   public T getValue() {
     if (type.equals("String")) {
       return (T) data;
-    } else if (type.equals("int")) {
+    } else if (type.equals("integer")) {
       int x = 0;
       try {
         x = Integer.parseInt(data);
@@ -65,5 +64,14 @@ public class Identifier<T> {
     } else {
       throw new InvalidTypeException();
     }
+  }
+
+
+  public String getDescription() {
+    return description;
+  }
+
+  public String errorMessage() {
+      return errMsge;
   }
 }
