@@ -20,12 +20,21 @@ public class OverlappingRectangles {
 
   public static void main(String... args) {
     String[] idArray = {"x1", "y1", "x2", "y2", "x3", "y3", "x4", "y4"};
-    String[] idType = {"int", "int", "int", "int", "int", "int", "int", "int"};
+    String[] idType = {
+      "integer", "integer", "integer", "integer", "integer", "integer", "integer", "integer"
+    };
 
-    Parser parse = new Parser("OverlappingRectangles");
-    for (int i = 0; i < idArray.length; i++) {
-      parse.addIdentifier(idArray[i], idType[i]);
-    }
+    Parser parse =
+        new Parser(
+            "OverlappingRectangles", "Determine the overlap and total area of two rectangles.");
+    parse.addIdentifier("x1", "lower-left x for rectangle 1", "integer");
+    parse.addIdentifier("y1", "lower-left y for rectangle 1", "integer");
+    parse.addIdentifier("x2", "upper-right x for rectangle 1", "integer");
+    parse.addIdentifier("y2", "upper-right y for rectangle 1", "integer");
+    parse.addIdentifier("x3", "lower-left x for rectangle 2", "integer");
+    parse.addIdentifier("y3", "lower-left y for rectangle 2", "integer");
+    parse.addIdentifier("x4", "upper-right x for rectangle 2", "integer");
+    parse.addIdentifier("y4", "upper-right y for rectangle 2", "integer");
     try {
       parse.parseCommandLine(args);
     } catch (TooManyArgsException e) {
@@ -33,8 +42,7 @@ public class OverlappingRectangles {
     } catch (NotEnoughArgsException e) {
       return;
     } catch (HelpException e) {
-      System.out.println(
-          "usage: java OverlappingRectangles [-h] x1 y1 x2 y2 x3 y3 x4 y4\n\nDetermine the overlap and total area of two rectangles.\n\npositional arguments:\n x1          (integer)     lower-left x for rectangle 1\n y1          (integer)     lower-left y for rectangle 1\n x2          (integer)     upper-right x for rectangle 1\n y2          (integer)     upper-right y for rectangle 1\n x3          (integer)     lower-left x for rectangle 2\n y3          (integer)     lower-left y for rectangle 2\n x4          (integer)     upper-right x for rectangle 2\n y4          (integer)     upper-right y for rectangle 2\n\nnamed arguments:\n -h, --help  show this help message and exit");
+      System.out.println(parse.getHelpMessage());
       return;
     }
     int[] rectangles = new int[8];

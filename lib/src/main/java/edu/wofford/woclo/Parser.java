@@ -10,6 +10,7 @@ import java.util.*;
 public class Parser {
   /** The list of identifiers. */
   private ArrayList<String> identifierNames;
+
   private ArrayList<String> optionalIdentifierNames;
   private HashMap<String, Identifier> ids;
   private HashMap<String, Identifier> optional;
@@ -31,62 +32,71 @@ public class Parser {
   }
 
   private void constructHelpMsg() {
-      helpMsg += " [-h]";
-      //add optionals to helpMsg
-      for (String opIdName : optionalIdentifierNames) { 
-        helpMsg += " [--" + opIdName;
-        if (optional.get(opIdName).getType() != "boolean") helpMsg += " " + opIdName.toUpperCase();
-        helpMsg += "]";
+    helpMsg += " [-h]";
+    // add optionals to helpMsg
+    for (int i = 0; i < optionalIdentifierNames.size(); i++) {
+      helpMsg += " [--" + optionalIdentifierNames.get(i);
+      if (optional.get(optionalIdentifierNames.get(i)).getType() != "boolean")
+        helpMsg += " " + optionalIdentifierNames.get(i).toUpperCase();
+      helpMsg += "]";
+    }
+    // add positionals to helpMsg
+    for (String idName : identifierNames) helpMsg += " " + idName;
+    // add usage
+    helpMsg += "\n\n" + usage;
+    // determine how much whitespace needed
+    int maxArgLength = "-h, --help".length();
+    for (String idName : identifierNames) maxArgLength = Math.max(maxArgLength, idName.length());
+    for (int i = 0; i < optionalIdentifierNames.size(); i++) {
+      // if named arg not boolean include uppercase name in length calculation
+      if (optional.get(optionalIdentifierNames.get(i)).getType() != "boolean") {
+        maxArgLength =
+            Math.max(
+                maxArgLength,
+                ("--"
+                        + optionalIdentifierNames.get(i)
+                        + optionalIdentifierNames.get(i).toUpperCase())
+                    .length());
+      } else {
+        maxArgLength = Math.max(maxArgLength, ("--" + optionalIdentifierNames.get(i)).length());
       }
-      //add positionals to helpMsg
-      for (String idName : identifierNames) helpMsg += " " + idName;
-      //add usage
-      helpMsg += "\n\n" + usage;
-      //determine how much whitespace needed
-      int maxArgLength = "-h, --help".length();
-      for (String idName : identifierNames) maxArgLength = max(maxArgLength, idName.length());
-      for (String idName : optionalIdentifierNames) {
-        //if named arg not boolean include uppercase name in length calculation
-        if (optional.get(opIdName).getType() != "boolean") {
-           maxArgLength = max(maxArgLength, ("--" + idName + opIdName.toUpperCase()).length());
-        } else {
-          maxArgLength = max(maxArgLength, ("--" + idName).length());
-        }
-      }
+    }
 
-      //add positional descriptions
-      helpMsg += "\n\n positional arguements:";
-      for (String idName : identifierNames) {
-        //add argname
-        helpMsg += "\n " + idName;
-        //add whitespace
-        for (int i=0; i<maxArgLength - idName.length() + 2; i++) helpMsg += " ";
-        //add type
-        helpMsg += "(" + ids.get(idName).getType() + ")"
-        //add whitespace (16 = number of chars between start of type and description)
-        for (int i=0; i<12 - ids.get(idName).getType().length(); i++) helpMsg += " ";
-        //add description
-        helpMsg += ids.get(idName).getDescription();
+    // add positional descriptions
+    helpMsg += "\n\n positional arguments:";
+    for (String idName : identifierNames) {
+      // add argname
+      helpMsg += "\n " + idName;
+      // add whitespace
+      for (int i = 0; i < maxArgLength - idName.length() + 2; i++) helpMsg += " ";
+      // add type
+      helpMsg += "(" + ids.get(idName).getType() + ")";
+      // add whitespace (16 = number of chars between start of type and description)
+      for (int i = 0; i < 12 - ids.get(idName).getType().length(); i++) helpMsg += " ";
+      // add description
+      helpMsg += ids.get(idName).getDescription();
+    }
+    // add named arguements
+    helpMsg += "\n\n named arguments:\n -h, --help";
+    for (String idName : identifierNames) {
+      for (int i = 0; i < maxArgLength - idName.length() + 2; i++) helpMsg += " ";
+    }
+    for (String idName : optionalIdentifierNames) {
+      // add argname
+      if (optional.get(idName).getType() != "boolean") {
+        helpMsg += "\n --" + idName + idName.toUpperCase();
+      } else {
+        helpMsg += "\n --" + idName;
       }
-      //add named arguements
-      helpMsg += "\n\n named arguements:\n -h, --help";
-      for (int i=0; i<maxArgLength - idName.length() + 2; i++) helpMsg += " ";
-      for (String idName : optionalIdentifierNames) {
-        //add argname
-        if (optional.get(idName).getType() != "boolean") {
-          helpMsg += "\n --" + idName + idName.toUpperCase();
-        } else {
-          helpMsg += "\n --" + idName;
-        }
-        //add whitespace
-        for (int i=0; i<maxArgLength - idName.length() + 2; i++) helpMsg += " ";
-        //add type
-        helpMsg += "(" + optional.get(idName).getType() + ")"
-        //add whitespace (16 = number of chars between start of type and description)
-        for (int i=0; i<12 - optional.get(idName).getType().length(); i++) helpMsg += " ";
-        //add description
-        helpMsg += optional.get(idName).getDescription();
-      }
+      // add whitespace
+      for (int i = 0; i < maxArgLength - idName.length() + 2; i++) helpMsg += " ";
+      // add type
+      helpMsg += "(" + optional.get(idName).getType() + ")";
+      // add whitespace (16 = number of chars between start of type and description)
+      for (int i = 0; i < 12 - optional.get(idName).getType().length(); i++) helpMsg += " ";
+      // add description
+      helpMsg += optional.get(idName).getDescription();
+    }
   }
 
   private String[] setOptionals(String[] command) {
@@ -211,16 +221,15 @@ public class Parser {
    * string.
    */
   public <T> T getValue(String command) {
-    int x = 0;
     if (optional.containsKey("--" + command)) {
       return (T) optional.get("--" + command).getValue();
     } else {
       try {
-        ids.get(x).getValue();
+        ids.get(command).getValue();
       } catch (IncorrectArgumentTypeException e) {
-        System.out.println(progName + " error: " + ids.get(x).errorMessage());
+        System.out.println(progName + " error: " + ids.get(command).errorMessage());
       }
-      return (T) ids.get(x).getValue();
+      return (T) ids.get(command).getValue();
     }
   }
 }

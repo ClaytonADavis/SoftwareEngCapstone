@@ -66,12 +66,11 @@ public class Identifier<T> {
     }
   }
 
-
   public String getDescription() {
     return description;
   }
 
   public String errorMessage() {
-      return errMsge;
+    return errMsge;
   }
 }
