@@ -4,14 +4,14 @@ public class Identifier<T> {
 
   private String name;
   private String type;
-  private String data;
+  private String value;
   private String description;
   private String errMsge;
 
   public Identifier() {
     name = "";
     type = "";
-    data = "";
+    value = "";
     description = "";
     errMsge = "";
   }
@@ -19,7 +19,7 @@ public class Identifier<T> {
   public Identifier(String name, String type, String data, String description) {
     this.name = name;
     this.type = type;
-    this.data = data;
+    this.value = data;
     this.description = description;
     errMsge = "";
   }
@@ -32,19 +32,19 @@ public class Identifier<T> {
     return type;
   }
 
-  public void addData(String data) {
-    this.data = data;
+  public void setValue(String value) {
+    this.value = value;
   }
 
   public T getValue() {
     if (type.equals("string")) {
-      return (T) data;
+      return (T) value;
     } else if (type.equals("integer")) {
       int x = 0;
       try {
-        x = Integer.parseInt(data);
+        x = Integer.parseInt(value);
       } catch (NumberFormatException e) {
-        errMsge = "the value " + data + " is not of type integer";
+        errMsge = "the value " + value + " is not of type integer";
         throw new IncorrectArgumentTypeException();
       }
       Integer X = Integer.valueOf(x);
@@ -52,15 +52,15 @@ public class Identifier<T> {
     } else if (type.equals("float")) {
       float f = 0.0f;
       try {
-        f = Float.parseFloat(data);
+        f = Float.parseFloat(value);
       } catch (NumberFormatException e) {
-        errMsge = "the value " + data + " is not of type" + type;
+        errMsge = "the value " + value + " is not of type" + type;
         throw new IncorrectArgumentTypeException();
       }
       Float F = Float.valueOf(f);
       return (T) F;
     } else if (type.equals("boolean")) {
-      return (T) Boolean.valueOf(data.equals("true"));
+      return (T) Boolean.valueOf(value.equals("true"));
     } else {
       throw new InvalidTypeException();
     }
