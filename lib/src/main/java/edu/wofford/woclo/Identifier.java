@@ -16,10 +16,10 @@ public class Identifier<T> {
     errMsge = "";
   }
 
-  public Identifier(String name, String type, String data, String description) {
+  public Identifier(String name, String type, String value, String description) {
     this.name = name;
     this.type = type;
-    this.value = data;
+    this.value = value;
     this.description = description;
     errMsge = "";
   }

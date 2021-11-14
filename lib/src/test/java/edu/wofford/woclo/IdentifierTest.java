@@ -13,27 +13,27 @@ public class IdentifierTest {
 
   @Test
   public void testConstructer() {
-    Identifier iden = new Identifier("arg1", "String", "5", "test");
+    Identifier iden = new Identifier("arg1", "string", "5", "test");
     assertEquals("arg1", iden.getName());
     assertEquals("5", iden.getValue());
   }
 
   @Test
   public void testAddData() {
-    Identifier iden = new Identifier("arg1", "String", "5", "test");
-    iden.addData("6");
+    Identifier iden = new Identifier("arg1", "string", "5", "test");
+    iden.setValue("6");
     assertEquals("6", iden.getValue());
   }
 
   public void testAddDataInt() {
     Identifier iden = new Identifier("arg1", "integer", "5", "test");
-    iden.addData("6");
+    iden.setValue("6");
     assertEquals(6, iden.getValue());
   }
 
   public void testAddDataFloat() {
     Identifier iden = new Identifier("arg1", "float", "5", "test");
-    iden.addData("6.6");
+    iden.setValue("6.6");
     assertEquals(6.6, iden.getValue());
   }
 
