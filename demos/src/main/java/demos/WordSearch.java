@@ -104,13 +104,11 @@ public class WordSearch {
   }
 
   public static void main(String... args) {
-    String[] idArray = {"grid", "target"};
-    String[] idType = {"String", "String"};
     Parser parse = new Parser("WordSearch", "Find a target word in a grid.");
-    parse.addIdentifier("grid", "the grid to search", "String");
-    parse.addIdentifier("target", "the target word", "String");
+    parse.addIdentifier("grid", "the grid to search", "string");
+    parse.addIdentifier("target", "the target word", "string");
     parse.addOptionalIdentifier("width", "the grid width (default: 5)", "integer", "5");
-    parse.addOptionalIdentifier("height", "the height width (default: 5)", "integer", "5");
+    parse.addOptionalIdentifier("height", "the grid height (default: 5)", "integer", "5");
     try {
       parse.parseCommandLine(args);
     } catch (TooManyArgsException e) {

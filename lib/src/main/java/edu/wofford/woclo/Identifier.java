@@ -37,7 +37,7 @@ public class Identifier<T> {
   }
 
   public T getValue() {
-    if (type.equals("String")) {
+    if (type.equals("string")) {
       return (T) data;
     } else if (type.equals("integer")) {
       int x = 0;

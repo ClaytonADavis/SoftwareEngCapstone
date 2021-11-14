@@ -33,37 +33,39 @@ public class Parser {
 
   private void constructHelpMsg() {
     helpMsg += " [-h]";
-    // add optionals to helpMsg
+    // add optional and position arg names to start of helpMsg
     for (int i = 0; i < optionalIdentifierNames.size(); i++) {
       helpMsg += " [--" + optionalIdentifierNames.get(i);
-      if (optional.get(optionalIdentifierNames.get(i)).getType() != "boolean")
+      if (optional.get("--" + optionalIdentifierNames.get(i)).getType() != "boolean")
         helpMsg += " " + optionalIdentifierNames.get(i).toUpperCase();
       helpMsg += "]";
     }
-    // add positionals to helpMsg
     for (String idName : identifierNames) helpMsg += " " + idName;
-    // add usage
+    // add usage message on new line
     helpMsg += "\n\n" + usage;
-    // determine how much whitespace needed
+
+    // determine how much whitespace needed between arg names and types in positional and named arg
+    // lists
     int maxArgLength = "-h, --help".length();
     for (String idName : identifierNames) maxArgLength = Math.max(maxArgLength, idName.length());
     for (int i = 0; i < optionalIdentifierNames.size(); i++) {
       // if named arg not boolean include uppercase name in length calculation
-      if (optional.get(optionalIdentifierNames.get(i)).getType() != "boolean") {
+      if (optional.get("--" + optionalIdentifierNames.get(i)).getType() != "boolean") {
         maxArgLength =
             Math.max(
                 maxArgLength,
                 ("--"
-                        + optionalIdentifierNames.get(i)
-                        + optionalIdentifierNames.get(i).toUpperCase())
-                    .length());
+                            + optionalIdentifierNames.get(i)
+                            + optionalIdentifierNames.get(i).toUpperCase())
+                        .length()
+                    + 1);
       } else {
         maxArgLength = Math.max(maxArgLength, ("--" + optionalIdentifierNames.get(i)).length());
       }
     }
 
     // add positional descriptions
-    helpMsg += "\n\n positional arguments:";
+    helpMsg += "\n\npositional arguments:";
     for (String idName : identifierNames) {
       // add argname
       helpMsg += "\n " + idName;
@@ -77,25 +79,28 @@ public class Parser {
       helpMsg += ids.get(idName).getDescription();
     }
     // add named arguements
-    helpMsg += "\n\n named arguments:\n -h, --help";
-    for (String idName : identifierNames) {
-      for (int i = 0; i < maxArgLength - idName.length() + 2; i++) helpMsg += " ";
-    }
+    helpMsg += "\n\nnamed arguments:\n -h, --help";
+    for (int i = 0; i < maxArgLength - "-h, --help".length() + 2; i++) helpMsg += " ";
+    helpMsg += "show this help message and exit";
+
     for (String idName : optionalIdentifierNames) {
-      // add argname
-      if (optional.get(idName).getType() != "boolean") {
-        helpMsg += "\n --" + idName + idName.toUpperCase();
+      // add argname and determine if boolean flag
+      // 1 for not bool 2 for is bool. used to add whitespace later
+      int isBool = 1;
+      if (optional.get("--" + idName).getType() != "boolean") {
+        helpMsg += "\n --" + idName + " " + idName.toUpperCase();
+        isBool = 2;
       } else {
         helpMsg += "\n --" + idName;
       }
-      // add whitespace
-      for (int i = 0; i < maxArgLength - idName.length() + 2; i++) helpMsg += " ";
+      // add whitespace. if is boolean multiply by isBool constant determined earlier
+      for (int i = 0; i < maxArgLength - isBool * idName.length() - 1; i++) helpMsg += " ";
       // add type
-      helpMsg += "(" + optional.get(idName).getType() + ")";
+      helpMsg += "(" + optional.get("--" + idName).getType() + ")";
       // add whitespace (16 = number of chars between start of type and description)
-      for (int i = 0; i < 12 - optional.get(idName).getType().length(); i++) helpMsg += " ";
+      for (int i = 0; i < 12 - optional.get("--" + idName).getType().length(); i++) helpMsg += " ";
       // add description
-      helpMsg += optional.get(idName).getDescription();
+      helpMsg += optional.get("--" + idName).getDescription();
     }
   }
 
@@ -146,7 +151,7 @@ public class Parser {
     ids = new HashMap<String, Identifier>();
     optional = new HashMap<String, Identifier>();
     progName = name;
-    helpMsg = "usage: " + name;
+    helpMsg = "usage: java " + name;
     this.usage = usage;
   }
 
@@ -155,7 +160,7 @@ public class Parser {
    * string and retuns void.
    */
   public void addIdentifier(String id, String description) {
-    Identifier Iden = new Identifier(id, "String", "", description);
+    Identifier Iden = new Identifier(id, "string", "", description);
     ids.put(id, Iden);
     identifierNames.add(id);
   }
@@ -167,7 +172,7 @@ public class Parser {
   }
 
   public void addOptionalIdentifier(String id, String description) {
-    Identifier Iden = new Identifier(id, "Boolean", "false", description);
+    Identifier Iden = new Identifier(id, "boolean", "false", description);
     optional.put("--" + id, Iden);
     optionalIdentifierNames.add(id);
   }
