@@ -141,4 +141,39 @@ public class ParserTest {
     }
     assert (false);
   }
+
+  @Test
+  public void testConstructHelpMsg() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("arg1", "test_description1");
+    parse.addIdentifier("arg2", "test_description2");
+    String[] command = {"5", "7", "--help"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (HelpException e) {
+      assertEquals(
+          "usage: java test [-h] arg1 arg2\n\ntest_usage\n\npositional arguments:\n arg1        (string)      test_description1\n arg2        (string)      test_description2\n\nnamed arguments:\n -h, --help  show this help message and exit",
+          parse.getHelpMessage());
+      return;
+    }
+    assert (false);
+  }
+
+  @Test
+  public void testConstructHelpMsgOpt() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("arg1", "test_description1");
+    parse.addIdentifier("arg2", "test_description2");
+    parse.addOptionalIdentifier("argopt", "opt_desc");
+    String[] command = {"5", "7", "--help"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (HelpException e) {
+      assertEquals(
+          "usage: java test [-h] [--argopt] arg1 arg2\n\ntest_usage\n\npositional arguments:\n arg1        (string)      test_description1\n arg2        (string)      test_description2\n\nnamed arguments:\n -h, --help  show this help message and exit\n --argopt   (boolean)     opt_desc",
+          parse.getHelpMessage());
+      return;
+    }
+    assert (false);
+  }
 }
