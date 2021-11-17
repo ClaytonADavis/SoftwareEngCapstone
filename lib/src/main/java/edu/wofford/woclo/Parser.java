@@ -122,10 +122,14 @@ public class Parser {
       // add whitespace. if is boolean multiply by isBool constant determined earlier
       for (int i = 0; i < maxArgLength - isBool * opIdName.length() - 1; i++) helpMsg += " ";
       // add type
-      helpMsg += "(" + optionalIdentifiers.get("--" + opIdName).getType() + ")";
-      // add whitespace (16 = number of chars between start of type and description)
-      for (int i = 0; i < 12 - optionalIdentifiers.get("--" + opIdName).getType().length(); i++)
-        helpMsg += " ";
+      if (!optionalIdentifiers.get("--" + opIdName).getType().equals("boolean")) {
+        helpMsg += "(" + optionalIdentifiers.get("--" + opIdName).getType() + ")";
+        // add whitespace (16 = number of chars between start of type and description)
+        for (int i = 0; i < 12 - optionalIdentifiers.get("--" + opIdName).getType().length(); i++)
+          helpMsg += " ";
+      } else {
+        for (int i = 0; i < maxArgLength - ("--" + opIdName).length(); i++) helpMsg += " ";
+      }
       // add description
       helpMsg += optionalIdentifiers.get("--" + opIdName).getDescription();
     }
@@ -144,8 +148,13 @@ public class Parser {
     List<String> noOpt = new ArrayList<String>();
     for (int i = 0; i < command.length; i++) {
       if (optionalIdentifiers.containsKey(command[i])) {
+        String s = optionalIdentifiers.get(command[i]).getType();
         try {
-          optionalIdentifiers.get(command[i]).setValue(command[i + 1]);
+          if (s.equals("boolean")) {
+            optionalIdentifiers.get(command[i]).setValue("true");
+          } else {
+            optionalIdentifiers.get(command[i]).setValue(command[i + 1]);
+          }
         } catch (ArrayIndexOutOfBoundsException e) {
           System.out.println(
               programName
@@ -153,7 +162,7 @@ public class Parser {
                   + optionalIdentifiers.get(command[i]).getName());
           throw new MissingArgumentException();
         }
-        String s = optionalIdentifiers.get(command[i]).getType();
+
         if (s.equals("integer")) {
           try {
             int x = (int) optionalIdentifiers.get(command[i]).getValue();
@@ -170,7 +179,7 @@ public class Parser {
                 programName + " error: the value " + command[i + 1] + " is not of type float");
           }
         }
-        i++;
+        if (!s.equals("boolean")) i++;
       } else {
         noOpt.add(command[i]);
       }
