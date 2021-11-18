@@ -4,145 +4,78 @@ import edu.wofford.woclo.*;
 import java.util.*;
 
 public class MaximalLayers {
-  private ArrayList<ArrayList<Integer>> MaxXList;
-  private ArrayList<ArrayList<Integer>> MaxYList;
-  private ArrayList<Integer> pointList;
+  private ArrayList<int[]> points;
+  private ArrayList<ArrayList<int[]>> layers;
   private boolean sortX;
   private boolean sortY;
 
-  public MaximalLayers(ArrayList<Integer> pointList, boolean sortX, boolean sortY) {
-    MaxXList = new ArrayList<ArrayList<Integer>>();
-    MaxYList = new ArrayList<ArrayList<Integer>>();
-    this.pointList = pointList;
+  public MaximalLayers(ArrayList<int[]> points, boolean sortX, boolean sortY) {
+    this.points = points;
+    layers = new ArrayList<ArrayList<int[]>>();
     this.sortX = sortX;
     this.sortY = sortY;
   }
 
-  private void getLayer() {
-    ArrayList<Integer> xs = new ArrayList<Integer>();
-    ArrayList<Integer> ys = new ArrayList<Integer>();
-    // get maximalY values
-    boolean maxsLeft = true;
-    Integer maxX = 0;
-    Integer maxY = 0;
-    while (maxsLeft) {
-      maxsLeft = false;
-      int maxI = 1;
-      maxX = 0;
-      for (int i = 1; i < pointList.size(); i += 2) {
-        if (maxY <= pointList.get(i)) {
-          maxX = pointList.get(i - 1);
-          maxY = pointList.get(i);
-          maxsLeft = true;
-          maxI = i;
-        }
-      }
-      if (maxsLeft) {
-        xs.add(maxX);
-        ys.add(maxY);
-        // remove index at maxI then previous index
-        pointList.remove(maxI);
-        pointList.remove(maxI - 1);
+  private boolean isMaximal(int[] p) {
+    for (int i = 0; i < points.size(); i++) {
+      if (p[0] < points.get(i)[0] && p[1] < points.get(i)[1]) {
+        return false;
       }
     }
-    // get maximalX values
-    maxsLeft = true;
-    maxX = 0;
-    maxY = 0;
-    while (maxsLeft) {
-      maxsLeft = false;
-      int maxI = 0;
-      maxY = 0;
-      for (int i = 0; i < pointList.size() - 1; i += 2) {
-        boolean mXs = true;
-        for (int x : xs) {
-          if (pointList.get(i) < x) mXs = false;
-        }
 
-        if (maxX <= pointList.get(i) && mXs) {
-          maxX = pointList.get(i);
-          maxY = pointList.get(i + 1);
-          maxsLeft = true;
-          maxI = i;
-        }
-      }
-      if (maxsLeft) {
-        xs.add(maxX);
-        ys.add(maxY);
-        /*remove index at maxI then next index.
-        not maxI + 1 because next index becomes current index after first remove() call*/
-        pointList.remove(maxI);
-        pointList.remove(maxI);
-      }
-    }
-    MaxXList.add(xs);
-    MaxYList.add(ys);
+    return true;
   }
 
-  /*
-   * recursively call getLayer until pointList is empty.
-   * Then sort by y and x if flags set.
-   */
+  private void getLayer() {
+    ArrayList<int[]> l = new ArrayList<int[]>();
+    ArrayList<int[]> tmpPoints = (ArrayList<int[]>) points.clone();
+    // check every element of point to see if it is maximal
+    for (int i = 0; i < points.size(); i++) {
+      int[] p = points.get(i);
+      if (isMaximal(p)) {
+        l.add(p);
+        tmpPoints.remove(p);
+      }
+    }
+    layers.add(l);
+    points = (ArrayList<int[]>) tmpPoints.clone();
+  }
+
   public void findAllLayers() {
-    if (pointList.size() != 0) {
+    if (points.size() != 0) {
       getLayer();
       findAllLayers();
     } else {
-      if (sortY) sortY();
-      if (sortX) sortX();
+      if (sortY) sortByIndex(1);
+      if (sortX) sortByIndex(0);
     }
   }
 
-  private void sortX() {
+  private void sortByIndex(int index) {
     // TODO sort both lists by x values. not sure if should be asc or desc order
-    for (int k = 0; k < MaxXList.size(); k++) {
-      ArrayList<Integer> tempX = MaxXList.get(k);
-      ArrayList<Integer> tempY = MaxYList.get(k);
-      for (int i = 0; i < tempX.size(); i++) {
-        int min = i;
-        for (int j = i + 1; j < tempX.size(); j++) if (tempX.get(i) > tempX.get(j)) min = j;
-        int keyX = tempX.get(min);
-        int keyY = tempY.get(min);
-        while (min > i) {
-          tempX.set(min, tempX.get(min - 1));
-          tempY.set(min, tempY.get(min - 1));
-          min--;
+    for (int k = 0; k < layers.size(); k++) {
+      ArrayList<int[]> temp = (ArrayList<int[]>) layers.get(k).clone();
+      for (int i = 0; i < temp.size(); i++) {
+        int[] t = temp.get(i);
+        int ti = i - 1;
+        while (ti > -1 && temp.get(ti)[index] > t[index]) {
+          temp.set(ti + 1, temp.get(ti));
+          ti--;
         }
-        tempX.set(i, keyX);
-        tempY.set(i, keyY);
+        temp.set(ti + 1, t);
       }
-    }
-  }
-
-  private void sortY() {
-    // TODO sort both lists by y values. Not sure if should be asc or desc order
-    for (int k = 0; k < MaxYList.size(); k++) {
-      ArrayList<Integer> tempX = MaxXList.get(k);
-      ArrayList<Integer> tempY = MaxYList.get(k);
-      for (int i = 0; i < tempY.size(); i++) {
-        int min = i;
-        for (int j = i + 1; j < tempY.size(); j++) if (tempY.get(i) > tempY.get(j)) min = j;
-        int keyX = tempX.get(min);
-        int keyY = tempY.get(min);
-        while (min > i) {
-          tempX.set(min, tempX.get(min - 1));
-          tempY.set(min, tempY.get(min - 1));
-          min--;
-        }
-        tempX.set(i, keyX);
-        tempY.set(i, keyY);
-      }
+      layers.set(k, (ArrayList<int[]>) temp.clone());
     }
   }
 
   public String toString() {
     String output = "";
-    for (int i = 0; i < MaxXList.size(); i++) {
+    for (int i = 0; i < layers.size(); i++) {
       output += (i + 1) + ":";
-      for (int j = 0; j < MaxXList.get(i).size(); j++) {
-        output += "(" + MaxXList.get(i).get(j) + "," + MaxYList.get(i).get(j) + ")";
+      for (int j = 0; j < layers.get(i).size(); j++) {
+        output += "(" + layers.get(i).get(j)[0] + "," + layers.get(i).get(j)[1] + ")";
       }
-      if (i < MaxXList.size() - 1) output += " ";
+      if (i < layers.size() - 1) output += " ";
     }
     return output;
   }
@@ -169,24 +102,37 @@ public class MaximalLayers {
     String input = "5,5,10,2,2,3,15,7,2,14,1,1,15,2,1,7,7,7,1,4,12,10,15,15";
     String input1 = parse.getValue("points");
     String[] tmp = input1.split(",");
-    ArrayList<Integer> points = new ArrayList<Integer>();
-    for (int i = 0; i < tmp.length; i++) {
+    ArrayList<int[]> points = new ArrayList<int[]>();
+    boolean noUnpaired = tmp.length % 2 == 0;
+
+    for (int i = 0; i < tmp.length - 1; i += 2) {
+      int x = 0;
+      int y = 0;
       try {
-        points.add(Integer.parseInt(tmp[i]));
+        x = Integer.parseInt(tmp[i]);
       } catch (NumberFormatException e) {
         System.out.println("MaximalLayers error: the value " + tmp[i] + " is not of type integer");
       }
+      try {
+        y = Integer.parseInt(tmp[i + 1]);
+      } catch (NumberFormatException e) {
+        System.out.println(
+            "MaximalLayers error: the value " + tmp[i + 1] + " is not of type integer");
+      }
+      int[] p = {x, y};
+      points.add(p);
     }
+
     boolean sortX = parse.getValue("sortedX");
     boolean sortY = parse.getValue("sortedY");
 
     MaximalLayers test = new MaximalLayers(points, sortX, sortY);
-    if (points.size() % 2 == 0) {
+    if (noUnpaired) {
       test.findAllLayers();
       System.out.println("\n" + test.toString());
     } else {
       System.out.println(
-          "MaximalLayers error: " + points.get(points.size() - 1) + " is an unpaired x coordinate");
+          "MaximalLayers error: " + tmp[tmp.length - 1] + " is an unpaired x coordinate");
     }
   }
 }
