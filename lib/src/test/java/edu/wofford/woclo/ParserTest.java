@@ -170,10 +170,70 @@ public class ParserTest {
       parse.parseCommandLine(command);
     } catch (HelpException e) {
       assertEquals(
-          "usage: java test [-h] [--argopt] arg1 arg2\n\ntest_usage\n\npositional arguments:\n arg1        (string)      test_description1\n arg2        (string)      test_description2\n\nnamed arguments:\n -h, --help  show this help message and exit\n --argopt   (boolean)     opt_desc",
+          "usage: java test [-h] [--argopt] arg1 arg2\n\ntest_usage\n\npositional arguments:\n arg1        (string)      test_description1\n arg2        (string)      test_description2\n\nnamed arguments:\n -h, --help  show this help message and exit\n --argopt     opt_desc",
           parse.getHelpMessage());
       return;
     }
     assert (false);
+  }
+
+  @Test
+  public void testConstructHelpMsgOptNotBol() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("arg1", "test_description1");
+    parse.addIdentifier("arg2", "test_description2");
+    parse.addOptionalIdentifier("argopt", "opt_desc", "string", "default");
+    String[] command = {"5", "7", "--help"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (HelpException e) {
+      assertEquals(
+          "usage: java test [-h] [--argopt ARGOPT] arg1 arg2\n\ntest_usage\n\npositional arguments:\n arg1             (string)      test_description1\n arg2             (string)      test_description2\n\nnamed arguments:\n -h, --help       show this help message and exit\n --argopt ARGOPT  (string)      opt_desc",
+          parse.getHelpMessage());
+      return;
+    }
+    assert (false);
+  }
+
+  @Test
+  public void testOptionalValuesInt() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("arg1", "test_description1");
+    parse.addIdentifier("arg2", "test_description2");
+    parse.addOptionalIdentifier("argopt", "test_description3", "integer", "12");
+    parse.addOptionalIdentifier("argopt2", "test_description4", "float", "0.0");
+    String[] command = {"5", "7"};
+    parse.parseCommandLine(command);
+    String[] command2 = {"5", "7", "--argopt", "s", "--argopt2", "a"};
+    try {
+      parse.parseCommandLine(command2);
+      parse.getValue("argopt");
+    } catch (IncorrectArgumentTypeException e) {
+      assert (true);
+      return;
+    }
+    try {
+      parse.parseCommandLine(command2);
+      parse.getValue("argopt2");
+    } catch (IncorrectArgumentTypeException e) {
+      assert (true);
+      return;
+    }
+    assert (false);
+  }
+
+  @Test
+  public void testOptionalValuesBool() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("arg1", "test_description1");
+    parse.addIdentifier("arg2", "test_description2");
+    parse.addOptionalIdentifier("argopt", "test_description3", "integer", "12");
+    parse.addOptionalIdentifier("argopt2", "test_description4", "float", "0.0");
+    parse.addOptionalIdentifier("argopt3", "test_description5");
+    String[] command = {"5", "7"};
+    parse.parseCommandLine(command);
+    String[] command2 = {"5", "7", "--argopt", "12", "--argopt2", "0.0", "--argopt3"};
+    parse.parseCommandLine(command2);
+    assertEquals(true, parse.getValue("argopt3"));
   }
 }
