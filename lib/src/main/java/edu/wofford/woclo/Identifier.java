@@ -7,6 +7,7 @@ public class Identifier<T> {
   private String value;
   private String description;
   private String errMsge;
+  private String shortName;
 
   public Identifier() {
     name = "";
@@ -14,6 +15,7 @@ public class Identifier<T> {
     value = "";
     description = "";
     errMsge = "";
+    shortName = "";
   }
 
   public Identifier(String name, String type, String value, String description) {
@@ -22,6 +24,16 @@ public class Identifier<T> {
     this.value = value;
     this.description = description;
     errMsge = "";
+    this.shortName = "";
+  }
+
+  public Identifier(String name, String type, String value, String description, String shortName) {
+    this.name = name;
+    this.type = type;
+    this.value = value;
+    this.description = description;
+    errMsge = "";
+    this.shortName = shortName;
   }
 
   public String getName() {
@@ -72,5 +84,9 @@ public class Identifier<T> {
 
   public String errorMessage() {
     return errMsge;
+  }
+
+  public String getShortName() {
+    return shortName;
   }
 }

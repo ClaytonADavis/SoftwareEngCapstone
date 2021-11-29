@@ -135,6 +135,43 @@ public class Parser {
     }
   }
 
+  private boolean setOptional(String[] command, int i, int j) {
+    String argName = command[i];
+    if (j > 0) argName = "-" + String.valueOf(command[i].charAt(j));
+
+    boolean b = false;
+    String s = optionalIdentifiers.get(argName).getType();
+    try {
+      if (s.equals("boolean")) {
+        b = true;
+        optionalIdentifiers.get(argName).setValue("true");
+      } else {
+        optionalIdentifiers.get(argName).setValue(command[i + 1]);
+      }
+    } catch (ArrayIndexOutOfBoundsException e) {
+      System.out.println(
+          programName + " error: no value for " + optionalIdentifiers.get(argName).getName());
+      throw new MissingArgumentException();
+    }
+
+    if (s.equals("integer")) {
+      try {
+        int x = (int) optionalIdentifiers.get(argName).getValue();
+      } catch (IncorrectArgumentTypeException e) {
+        System.out.println(
+            programName + " error: the value " + command[i + 1] + " is not of type integer");
+      }
+    } else if (s.equals("float")) {
+      float f = 0f;
+      try {
+        f = (float) optionalIdentifiers.get(argName).getValue();
+      } catch (IncorrectArgumentTypeException e) {
+        System.out.println(
+            programName + " error: the value " + command[i + 1] + " is not of type float");
+      }
+    }
+    return b;
+  }
   /**
    * Gets optional values from command line then return the argument list without optional values.
    * Throws exceptions for if an argument in the given argument list does not exist or if the
@@ -147,41 +184,30 @@ public class Parser {
   private String[] setOptionals(String[] command) {
     List<String> noOpt = new ArrayList<String>();
     for (int i = 0; i < command.length; i++) {
-      if (optionalIdentifiers.containsKey(command[i])) {
-        String s = optionalIdentifiers.get(command[i]).getType();
-        try {
-          if (s.equals("boolean")) {
-            optionalIdentifiers.get(command[i]).setValue("true");
-          } else {
-            optionalIdentifiers.get(command[i]).setValue(command[i + 1]);
-          }
-        } catch (ArrayIndexOutOfBoundsException e) {
-          System.out.println(
-              programName
-                  + " error: no value for "
-                  + optionalIdentifiers.get(command[i]).getName());
-          throw new MissingArgumentException();
-        }
 
-        if (s.equals("integer")) {
-          try {
-            int x = (int) optionalIdentifiers.get(command[i]).getValue();
-          } catch (IncorrectArgumentTypeException e) {
-            System.out.println(
-                programName + " error: the value " + command[i + 1] + " is not of type integer");
+      if (command[i].charAt(0) == '-') {
+        if (command[i].charAt(1) != '-') {
+          for (int j = 1; j < command[i].length(); j++) {
+            if (optionalIdentifiers.containsKey(command[i])) {
+              boolean s = setOptional(command, i, j);
+              if (!s) i++;
+            }
           }
-        } else if (s.equals("float")) {
-          float f = 0f;
-          try {
-            f = (float) optionalIdentifiers.get(command[i]).getValue();
-          } catch (IncorrectArgumentTypeException e) {
-            System.out.println(
-                programName + " error: the value " + command[i + 1] + " is not of type float");
+        } else {
+          if (optionalIdentifiers.containsKey(command[i])) {
+            boolean s = setOptional(command, i, 0);
+            if (!s) i++;
+          } else {
+            noOpt.add(command[i]);
           }
         }
-        if (!s.equals("boolean")) i++;
       } else {
-        noOpt.add(command[i]);
+        if (optionalIdentifiers.containsKey(command[i])) {
+          boolean s = setOptional(command, i, 0);
+          if (!s) i++;
+        } else {
+          noOpt.add(command[i]);
+        }
       }
     }
     String[] temp = new String[noOpt.size()];
@@ -198,7 +224,7 @@ public class Parser {
    * @param description
    */
   public void addIdentifier(String id, String description) {
-    Identifier Iden = new Identifier(id, "string", "", description);
+    Identifier Iden = new Identifier(id, "string", "", description, "");
     identifiers.put(id, Iden);
     identifierNames.add(id);
   }
@@ -210,7 +236,7 @@ public class Parser {
    * @param type
    */
   public void addIdentifier(String id, String description, String type) {
-    Identifier Iden = new Identifier(id, type, "", description);
+    Identifier Iden = new Identifier(id, type, "", description, "");
     identifiers.put(id, Iden);
     identifierNames.add(id);
   }
@@ -222,8 +248,15 @@ public class Parser {
    * @param description
    */
   public void addOptionalIdentifier(String id, String description) {
-    Identifier Iden = new Identifier(id, "boolean", "false", description);
+    Identifier Iden = new Identifier(id, "boolean", "false", description, "");
     optionalIdentifiers.put("--" + id, Iden);
+    optionalIdentifierNames.add(id);
+  }
+
+  public void addOptionalIdentifier(String id, String description, String shortId) {
+    Identifier Iden = new Identifier(id, "boolean", "false", description, shortId);
+    optionalIdentifiers.put("--" + id, Iden);
+    optionalIdentifiers.put("-" + shortId, Iden);
     optionalIdentifierNames.add(id);
   }
   /**
@@ -235,8 +268,16 @@ public class Parser {
    * @param default
    */
   public void addOptionalIdentifier(String id, String description, String type, String Default) {
-    Identifier Iden = new Identifier(id, type, Default, description);
+    Identifier Iden = new Identifier(id, type, Default, description, "");
     optionalIdentifiers.put("--" + id, Iden);
+    optionalIdentifierNames.add(id);
+  }
+
+  public void addOptionalIdentifier(
+      String id, String description, String type, String Default, String shortId) {
+    Identifier Iden = new Identifier(id, type, Default, description, shortId);
+    optionalIdentifiers.put("--" + id, Iden);
+    optionalIdentifiers.put("-" + shortId, Iden);
     optionalIdentifierNames.add(id);
   }
 
