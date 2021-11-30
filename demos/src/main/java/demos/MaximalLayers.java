@@ -84,8 +84,8 @@ public class MaximalLayers {
     // TODO implement parser library here
     Parser parse = new Parser("MaximalLayers", "Sort the points into layers.");
     parse.addIdentifier("points", "the data points");
-    parse.addOptionalIdentifier("sortedX", "sort layers by x coordinate");
-    parse.addOptionalIdentifier("sortedY", "sort layers by y coordinate");
+    parse.addOptionalIdentifier("sortedX", "sort layers by x coordinate", "boolean", "false");
+    parse.addOptionalIdentifier("sortedY", "sort layers by y coordinate", "boolean", "false");
     try {
       parse.parseCommandLine(args);
     } catch (TooManyArgsException e) {

@@ -164,7 +164,7 @@ public class ParserTest {
     Parser parse = new Parser("test", "test_usage");
     parse.addIdentifier("arg1", "test_description1");
     parse.addIdentifier("arg2", "test_description2");
-    parse.addOptionalIdentifier("argopt", "opt_desc");
+    parse.addOptionalIdentifier("argopt", "opt_desc", "boolean", "false");
     String[] command = {"5", "7", "--help"};
     try {
       parse.parseCommandLine(command);
@@ -229,11 +229,30 @@ public class ParserTest {
     parse.addIdentifier("arg2", "test_description2");
     parse.addOptionalIdentifier("argopt", "test_description3", "integer", "12");
     parse.addOptionalIdentifier("argopt2", "test_description4", "float", "0.0");
-    parse.addOptionalIdentifier("argopt3", "test_description5");
+    parse.addOptionalIdentifier("argopt3", "test_description5", "boolean", "false");
     String[] command = {"5", "7"};
     parse.parseCommandLine(command);
     String[] command2 = {"5", "7", "--argopt", "12", "--argopt2", "0.0", "--argopt3"};
     parse.parseCommandLine(command2);
     assertEquals(true, parse.getValue("argopt3"));
+  }
+
+  @Test
+  public void testShortForm() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier("short", "test_description", "string", "5", "s");
+    String[] command = {"-s", "7"};
+    parse.parseCommandLine(command);
+    assertEquals("7", parse.getValue("short"));
+  }
+
+  @Test
+  public void testShortFormMultiple() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier("short", "test_description", "boolean", "false", "s");
+    parse.addOptionalIdentifier("tester", "test_description1", "boolean", "t");
+    String[] command = {"-s", "--tester"};
+    parse.parseCommandLine(command);
+    assertEquals(true, parse.getValue("short"));
   }
 }

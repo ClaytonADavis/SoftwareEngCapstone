@@ -186,7 +186,7 @@ public class Parser {
     for (int i = 0; i < command.length; i++) {
 
       if (command[i].charAt(0) == '-') {
-        if (command[i].charAt(1) != '-') {
+        if (command[i].charAt(1) != '-' && !Character.isDigit(command[i].charAt(1))) {
           for (int j = 1; j < command[i].length(); j++) {
             if (optionalIdentifiers.containsKey(command[i])) {
               boolean s = setOptional(command, i, j);
@@ -241,24 +241,6 @@ public class Parser {
     identifierNames.add(id);
   }
 
-  /**
-   * adds an optional identifier as a flag
-   *
-   * @param id
-   * @param description
-   */
-  public void addOptionalIdentifier(String id, String description) {
-    Identifier Iden = new Identifier(id, "boolean", "false", description, "");
-    optionalIdentifiers.put("--" + id, Iden);
-    optionalIdentifierNames.add(id);
-  }
-
-  public void addOptionalIdentifier(String id, String description, String shortId) {
-    Identifier Iden = new Identifier(id, "boolean", "false", description, shortId);
-    optionalIdentifiers.put("--" + id, Iden);
-    optionalIdentifiers.put("-" + shortId, Iden);
-    optionalIdentifierNames.add(id);
-  }
   /**
    * adds an optional identifier as a type string, integer, or float with a specified default value
    *
