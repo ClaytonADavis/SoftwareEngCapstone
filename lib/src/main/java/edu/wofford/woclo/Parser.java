@@ -72,20 +72,39 @@ public class Parser {
     // determine how much whitespace needed between arg names and types in positional and named arg
     // lists
     int maxArgLength = "-h, --help".length();
-    for (String idName : identifierNames) maxArgLength = Math.max(maxArgLength, idName.length());
+
+    for (String idName : identifierNames) {
+      maxArgLength = Math.max(maxArgLength, idName.length());
+    }
     for (int i = 0; i < optionalIdentifierNames.size(); i++) {
       // if named arg not boolean include uppercase name in length calculation
+      String shortLong = "";
+      if (!optionalIdentifiers
+          .get("--" + optionalIdentifierNames.get(i))
+          .getShortName()
+          .equals("")) {
+        shortLong =
+            "-" + optionalIdentifiers.get("--" + optionalIdentifierNames.get(i)).getShortName();
+
+        if (optionalIdentifiers.get("--" + optionalIdentifierNames.get(i)).getType() != "boolean") {
+          shortLong += " " + optionalIdentifierNames.get(i) + ", ";
+        } else {
+          shortLong += ", ";
+        }
+      }
       if (optionalIdentifiers.get("--" + optionalIdentifierNames.get(i)).getType() != "boolean") {
         maxArgLength =
             Math.max(
                 maxArgLength,
-                ("--"
+                (shortLong
+                            + "--"
                             + optionalIdentifierNames.get(i)
                             + optionalIdentifierNames.get(i).toUpperCase())
                         .length()
                     + 1);
       } else {
-        maxArgLength = Math.max(maxArgLength, ("--" + optionalIdentifierNames.get(i)).length());
+        maxArgLength =
+            Math.max(maxArgLength, (shortLong + "--" + optionalIdentifierNames.get(i)).length());
       }
     }
 
@@ -113,11 +132,20 @@ public class Parser {
       // add argname and determine if boolean flag
       // is bool used to account for extra whitespace in non-boolean named arguements. ie. --op OP
       int isBool = 1;
+      String shortLong = "";
+      if (!optionalIdentifiers.get("--" + opIdName).getShortName().equals("")) {
+        shortLong = "-" + optionalIdentifiers.get("--" + opIdName).getShortName();
+        if (optionalIdentifiers.get("--" + opIdName).getType() != "boolean") {
+          shortLong += " " + opIdName.toUpperCase() + ", ";
+        } else {
+          shortLong += ", ";
+        }
+      }
       if (optionalIdentifiers.get("--" + opIdName).getType() != "boolean") {
-        helpMsg += "\n --" + opIdName + " " + opIdName.toUpperCase();
+        helpMsg += "\n " + shortLong + "--" + opIdName + " " + opIdName.toUpperCase();
         isBool = 2;
       } else {
-        helpMsg += "\n --" + opIdName;
+        helpMsg += "\n " + shortLong + "--" + opIdName;
       }
       // add whitespace. if is boolean multiply by isBool constant determined earlier
       for (int i = 0; i < maxArgLength - isBool * opIdName.length() - 1; i++) helpMsg += " ";
@@ -188,7 +216,7 @@ public class Parser {
       if (command[i].charAt(0) == '-') {
         if (command[i].charAt(1) != '-' && !Character.isDigit(command[i].charAt(1))) {
           for (int j = 1; j < command[i].length(); j++) {
-            if (optionalIdentifiers.containsKey(command[i])) {
+            if (optionalIdentifiers.containsKey("-" + command[i].charAt(j))) {
               boolean s = setOptional(command, i, j);
               if (!s) i++;
             }

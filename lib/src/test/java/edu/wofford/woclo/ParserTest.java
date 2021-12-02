@@ -250,9 +250,19 @@ public class ParserTest {
   public void testShortFormMultiple() {
     Parser parse = new Parser("test", "test_usage");
     parse.addOptionalIdentifier("short", "test_description", "boolean", "false", "s");
-    parse.addOptionalIdentifier("tester", "test_description1", "boolean", "t");
+    parse.addOptionalIdentifier("tester", "test_description1", "boolean", "false", "t");
     String[] command = {"-s", "--tester"};
     parse.parseCommandLine(command);
     assertEquals(true, parse.getValue("short"));
+  }
+
+  @Test
+  public void testShortFormMultipleFlags() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier("short", "test_description", "boolean", "false", "s");
+    parse.addOptionalIdentifier("tester", "test_description1", "boolean", "false", "t");
+    String[] command = {"-st"};
+    parse.parseCommandLine(command);
+    assertEquals(true, parse.getValue("tester"));
   }
 }

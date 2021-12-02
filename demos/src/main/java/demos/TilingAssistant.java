@@ -35,12 +35,28 @@ public class TilingAssistant {
       return;
     }
 
-    float roomHeight = parse.getValue("length");
-    float roomWidth = parse.getValue("width");
+    float roomHeight = parse.getValue("width");
+    float roomWidth = parse.getValue("length");
     float tileSize = parse.getValue("tilesize");
     float groutGap = parse.getValue("groutgap");
     boolean fullOnly = parse.getValue("fullonly");
     boolean metric = parse.getValue("metric");
+    if (roomHeight < 0) {
+      System.out.println("TilingAssistant error: width must be positive");
+      // System.exit(0);
+    }
+    if (roomWidth < 0) {
+      System.out.println("TilingAssistant error: length must be positive");
+      // System.exit(0);
+    }
+    if (tileSize < 0) {
+      System.out.println("TilingAssistant error: tilesize must be positive");
+      // System.exit(0);
+    }
+    if (groutGap < 0) {
+      System.out.println("TilingAssistant error: groutgap must be positive");
+      // System.exit(0);
+    }
     String units = "in";
     if (metric) units = "cm";
 
@@ -63,8 +79,8 @@ public class TilingAssistant {
     cornerTiles = extraX > 0.0000001f && extraY > 0.0000001f;
 
     // determine number of partial tiles
-    partialXTiles = (int) Math.round(fullX);
-    partialYTiles = (int) Math.round(fullY);
+    partialXTiles = 2 * (int) Math.round(fullY);
+    partialYTiles = 2 * (int) Math.round(fullX);
 
     // initialize output strings for full, partial, and corner tiles
     String fullOutput = "";
