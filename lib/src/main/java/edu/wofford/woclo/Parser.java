@@ -60,7 +60,12 @@ public class Parser {
     helpMsg = "usage: java " + programName + " [-h]";
     // add named and positional arg names to start of helpMsg
     for (int i = 0; i < optionalIdentifierNames.size(); i++) {
-      helpMsg += " [--" + optionalIdentifierNames.get(i);
+      if (optionalIdentifiers.get("--" + optionalIdentifierNames.get(i)).getShortName() != "") {
+        helpMsg +=
+            " [-" + optionalIdentifiers.get("--" + optionalIdentifierNames.get(i)).getShortName();
+      } else {
+        helpMsg += " [--" + optionalIdentifierNames.get(i);
+      }
       if (optionalIdentifiers.get("--" + optionalIdentifierNames.get(i)).getType() != "boolean")
         helpMsg += " " + optionalIdentifierNames.get(i).toUpperCase();
       helpMsg += "]";
@@ -142,21 +147,23 @@ public class Parser {
         }
       }
       if (optionalIdentifiers.get("--" + opIdName).getType() != "boolean") {
-        helpMsg += "\n " + shortLong + "--" + opIdName + " " + opIdName.toUpperCase();
+        shortLong += "--" + opIdName + " " + opIdName.toUpperCase();
+        helpMsg += "\n " + shortLong;
         isBool = 2;
       } else {
-        helpMsg += "\n " + shortLong + "--" + opIdName;
+        shortLong += "--" + opIdName;
+        helpMsg += "\n " + shortLong;
       }
       // add whitespace. if is boolean multiply by isBool constant determined earlier
-      for (int i = 0; i < maxArgLength - isBool * opIdName.length() - 1; i++) helpMsg += " ";
+      for (int i = 0; i < maxArgLength - shortLong.length() + 1; i++) helpMsg += " ";
       // add type
       if (!optionalIdentifiers.get("--" + opIdName).getType().equals("boolean")) {
-        helpMsg += "(" + optionalIdentifiers.get("--" + opIdName).getType() + ")";
+        helpMsg += " (" + optionalIdentifiers.get("--" + opIdName).getType() + ")";
         // add whitespace (16 = number of chars between start of type and description)
         for (int i = 0; i < 12 - optionalIdentifiers.get("--" + opIdName).getType().length(); i++)
           helpMsg += " ";
       } else {
-        for (int i = 0; i < maxArgLength - ("--" + opIdName).length(); i++) helpMsg += " ";
+        helpMsg += " ";
       }
       // add description
       helpMsg += optionalIdentifiers.get("--" + opIdName).getDescription();
@@ -252,7 +259,7 @@ public class Parser {
    * @param description
    */
   public void addIdentifier(String id, String description) {
-    Identifier Iden = new Identifier(id, "string", "", description, "");
+    Identifier Iden = new Identifier(id, "string", "", description, "", new String[0]);
     identifiers.put(id, Iden);
     identifierNames.add(id);
   }
@@ -264,7 +271,36 @@ public class Parser {
    * @param type
    */
   public void addIdentifier(String id, String description, String type) {
-    Identifier Iden = new Identifier(id, type, "", description, "");
+    Identifier Iden = new Identifier(id, type, "", description, "", new String[0]);
+    identifiers.put(id, Iden);
+    identifierNames.add(id);
+  }
+
+  public void addIdentifier(String id, String description, String type, String[] restrictedValues) {
+    Identifier Iden = new Identifier(id, type, "", description, "", restrictedValues);
+    identifiers.put(id, Iden);
+    identifierNames.add(id);
+  }
+
+  public void addIdentifier(String id, String description, String type, int[] restrictedValues) {
+    String[] temp = new String[restrictedValues.length];
+    for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
+    Identifier Iden = new Identifier(id, type, "", description, "", temp);
+    identifiers.put(id, Iden);
+    identifierNames.add(id);
+  }
+
+  public void addIdentifier(String id, String description, String type, float[] restrictedValues) {
+    String[] temp = new String[restrictedValues.length];
+    for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
+    Identifier Iden = new Identifier(id, type, "", description, "", temp);
+    identifiers.put(id, Iden);
+    identifierNames.add(id);
+  }
+
+  public void addIdentifier(
+      String id, String description, String type, boolean[] restrictedValues) {
+    Identifier Iden = new Identifier(id, type, "", description, "", new String[0]);
     identifiers.put(id, Iden);
     identifierNames.add(id);
   }
@@ -278,14 +314,70 @@ public class Parser {
    * @param default
    */
   public void addOptionalIdentifier(String id, String description, String type, String Default) {
-    Identifier Iden = new Identifier(id, type, Default, description, "");
+    Identifier Iden = new Identifier(id, type, Default, description, "", new String[0]);
     optionalIdentifiers.put("--" + id, Iden);
     optionalIdentifierNames.add(id);
   }
 
   public void addOptionalIdentifier(
       String id, String description, String type, String Default, String shortId) {
-    Identifier Iden = new Identifier(id, type, Default, description, shortId);
+    Identifier Iden = new Identifier(id, type, Default, description, shortId, new String[0]);
+    optionalIdentifiers.put("--" + id, Iden);
+    optionalIdentifiers.put("-" + shortId, Iden);
+    optionalIdentifierNames.add(id);
+  }
+
+  public void addOptionalIdentifier(
+      String id,
+      String description,
+      String type,
+      String Default,
+      String shortId,
+      String[] restrictedValues) {
+    Identifier Iden = new Identifier(id, type, Default, description, shortId, restrictedValues);
+    optionalIdentifiers.put("--" + id, Iden);
+    optionalIdentifiers.put("-" + shortId, Iden);
+    optionalIdentifierNames.add(id);
+  }
+
+  public void addOptionalIdentifier(
+      String id,
+      String description,
+      String type,
+      String Default,
+      String shortId,
+      int[] restrictedValues) {
+    String[] temp = new String[restrictedValues.length];
+    for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
+    Identifier Iden = new Identifier(id, type, Default, description, shortId, temp);
+    optionalIdentifiers.put("--" + id, Iden);
+    optionalIdentifiers.put("-" + shortId, Iden);
+    optionalIdentifierNames.add(id);
+  }
+
+  public void addOptionalIdentifier(
+      String id,
+      String description,
+      String type,
+      String Default,
+      String shortId,
+      float[] restrictedValues) {
+    String[] temp = new String[restrictedValues.length];
+    for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
+    Identifier Iden = new Identifier(id, type, Default, description, shortId, temp);
+    optionalIdentifiers.put("--" + id, Iden);
+    optionalIdentifiers.put("-" + shortId, Iden);
+    optionalIdentifierNames.add(id);
+  }
+
+  public void addOptionalIdentifier(
+      String id,
+      String description,
+      String type,
+      String Default,
+      String shortId,
+      boolean[] restrictedValues) {
+    Identifier Iden = new Identifier(id, type, Default, description, shortId, new String[0]);
     optionalIdentifiers.put("--" + id, Iden);
     optionalIdentifiers.put("-" + shortId, Iden);
     optionalIdentifierNames.add(id);

@@ -1,5 +1,7 @@
 package edu.wofford.woclo;
 
+import java.util.*;
+
 public class Identifier<T> {
 
   private String name;
@@ -8,6 +10,7 @@ public class Identifier<T> {
   private String description;
   private String errMsge;
   private String shortName;
+  private Set<String> restrictedValues;
 
   public Identifier() {
     name = "";
@@ -16,6 +19,7 @@ public class Identifier<T> {
     description = "";
     errMsge = "";
     shortName = "";
+    restrictedValues = new HashSet<String>();
   }
 
   public Identifier(String name, String type, String value, String description) {
@@ -25,6 +29,7 @@ public class Identifier<T> {
     this.description = description;
     errMsge = "";
     this.shortName = "";
+    this.restrictedValues = new HashSet<String>();
   }
 
   public Identifier(String name, String type, String value, String description, String shortName) {
@@ -34,6 +39,25 @@ public class Identifier<T> {
     this.description = description;
     errMsge = "";
     this.shortName = shortName;
+    this.restrictedValues = new HashSet<String>();
+  }
+
+  public Identifier(
+      String name,
+      String type,
+      String value,
+      String description,
+      String shortName,
+      String[] restrictedValues) {
+    this.name = name;
+    this.type = type;
+    this.value = value;
+    this.description = description;
+    errMsge = "";
+    this.shortName = shortName;
+    this.restrictedValues = new HashSet<String>();
+    for (int i = 0; i < restrictedValues.length; i++)
+      this.restrictedValues.add(restrictedValues[i]);
   }
 
   public String getName() {
@@ -88,5 +112,9 @@ public class Identifier<T> {
 
   public String getShortName() {
     return shortName;
+  }
+
+  public boolean isRestrictedValue(String arg) {
+    return restrictedValues.contains(arg) || restrictedValues.isEmpty();
   }
 }

@@ -170,7 +170,7 @@ public class ParserTest {
       parse.parseCommandLine(command);
     } catch (HelpException e) {
       assertEquals(
-          "usage: java test [-h] [--argopt] arg1 arg2\n\ntest_usage\n\npositional arguments:\n arg1        (string)      test_description1\n arg2        (string)      test_description2\n\nnamed arguments:\n -h, --help  show this help message and exit\n --argopt     opt_desc",
+          "usage: java test [-h] [--argopt] arg1 arg2\n\ntest_usage\n\npositional arguments:\n arg1        (string)      test_description1\n arg2        (string)      test_description2\n\nnamed arguments:\n -h, --help  show this help message and exit\n --argopt    opt_desc",
           parse.getHelpMessage());
       return;
     }
