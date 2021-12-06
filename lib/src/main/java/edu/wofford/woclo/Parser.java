@@ -181,6 +181,8 @@ public class Parser {
         b = true;
         optionalIdentifiers.get(argName).setValue("true");
       } else {
+        if (!optionalIdentifiers.get(argName).isRestrictedValue(command[i + 1]))
+          throw new InformativeException();
         optionalIdentifiers.get(argName).setValue(command[i + 1]);
       }
     } catch (ArrayIndexOutOfBoundsException e) {
@@ -426,6 +428,18 @@ public class Parser {
     for (int i = 0; i < commandLine.length; i++) {
       key = identifierNames.get(i);
       Identifier t = identifiers.get(key);
+      if (!t.isRestrictedValue(commandLine[i])) {
+        System.out.println(
+            programName
+                + " error: "
+                + identifiers.get(key).getName()
+                + " value "
+                + commandLine[i]
+                + " is not a member of ["
+                + identifiers.get(key).getRestrictedValueString()
+                + "]");
+        throw new InformativeException();
+      }
       t.setValue(commandLine[i]);
       identifiers.replace(key, t);
     }
@@ -438,6 +452,12 @@ public class Parser {
    */
   public <T> T getValue(String argumentName) {
     if (optionalIdentifiers.containsKey("--" + argumentName)) {
+      try {
+        optionalIdentifiers.get("--" + argumentName).getValue();
+      } catch (IncorrectArgumentTypeException e) {
+        System.out.println(
+            programName + " error: " + optionalIdentifiers.get("--" + argumentName).errorMessage());
+      }
       return (T) optionalIdentifiers.get("--" + argumentName).getValue();
     } else {
       try {

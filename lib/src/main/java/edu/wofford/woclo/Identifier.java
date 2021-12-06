@@ -114,6 +114,15 @@ public class Identifier<T> {
     return shortName;
   }
 
+  public String getRestrictedValueString() {
+    String output = "";
+    for (String s : restrictedValues) {
+      output += s;
+      output += ", ";
+    }
+    return output.substring(0, output.length() - 2);
+  }
+
   public boolean isRestrictedValue(String arg) {
     return restrictedValues.contains(arg) || restrictedValues.isEmpty();
   }
