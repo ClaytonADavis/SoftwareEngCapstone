@@ -9,68 +9,64 @@ public class XMLParser {
   private String[] namedArgs;
   private ArrayList<Identifier> identifiers;
   private ArrayList<Identifier> optionalIdentifiers;
+  private boolean matches = false;
   private String regexStr =
       "^<.*> \n<arguments>\\s*<positionalArgs>\\s*<positional>\\s*([\r\n\\w\\d\\W\\D]*)\\s*</positional>\\s*</positionalArgs>\\s*<namedArgs>\\s*<named>\\s*([\r\n\\w\\d\\W\\D]*)\\s*</named>\\s*</namedArgs>\\s*</arguments>$";
-  private String[] requiredParams = {"name", "type", "description"};
-  private String[] optionalParams = {"restrictions", "default", "shortID"};
+
+  public boolean matches() {
+    return matches;
+  }
+
+  public String getUnformattedArg() {
+    return positionalArgs[1];
+  }
 
   public XMLParser(String xml) {
     Pattern argsPattern = Pattern.compile(regexStr);
     Matcher argsMatcher = argsPattern.matcher(xml);
-    boolean matches = argsMatcher.matches();
+    matches = argsMatcher.matches();
 
     positionalArgs = argsMatcher.group(1).split("</positional>\\s*<positional>");
     namedArgs = argsMatcher.group(2).split("</named>\\s*<named>");
 
     identifiers = new ArrayList<Identifier>();
     optionalIdentifiers = new ArrayList<Identifier>();
+
+    for (String arg : positionalArgs) identifiers.add(assignIdentifier(arg));
+    // identifiers.add(assignIdentifier(positionalArgs[0]));
+    for (String arg : namedArgs) optionalIdentifiers.add(assignIdentifier(arg));
   }
 
-  public void addIdentifier(String id, String description, String type, String[] restrictedValues) {
-    Identifier Iden = new Identifier(id, type, "", description, "", restrictedValues);
-    identifiers.add(Iden);
+  public ArrayList<Identifier> getPositionalIdentifiers() {
+    return identifiers;
   }
 
-  public void addIdentifier(String id, String description, String type, int[] restrictedValues) {
-    String[] temp = new String[restrictedValues.length];
-    for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
-    Identifier Iden = new Identifier(id, type, "", description, "", temp);
-    identifiers.add(Iden);
+  public ArrayList<Identifier> getOptionalIdentifiers() {
+    return optionalIdentifiers;
   }
 
-  public void addIdentifier(String id, String description, String type, float[] restrictedValues) {
-    String[] temp = new String[restrictedValues.length];
-    for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
-    Identifier Iden = new Identifier(id, type, "", description, "", temp);
-    identifiers.add(Iden);
-  }
+  private Identifier assignIdentifier(String arg) {
+    String type;
+    String description;
+    String name;
+    String[] restrictions;
+    String shortname = "";
+    String defaultValue = "";
 
-  public void addIdentifier(
-      String id, String description, String type, boolean[] restrictedValues) {
-    Identifier Iden = new Identifier(id, type, "", description, "", new String[0]);
-    identifiers.add(Iden);
-  }
+    type = getArgParameter("type", arg);
+    description = getArgParameter("description", arg);
+    name = getArgParameter("name", arg);
+    shortname = getArgParameter("shortname", arg);
+    defaultValue = getParamList("default", arg)[0];
+    restrictions = getParamList("restrictions", arg);
 
-  private void assignIdentifiers(String arg) {
-      String type;
-      String description;
-      String name;
-      ArrayList<String> restrictions = new ArrayList<String>();
-      String shortID = "";
-      String defaultVal = "";
+    if (type.equals("") || description.equals("") || name.equals(""))
+      throw new InvalidXMLException();
 
-      type = getArgParameter("type", arg);
-      description = getArgParameter("description", arg);
-      name = getArgParameter("name", arg);
-      shortID = getArgParameter("shortname", arg);
-      defaultVal = getArgParameter("default", arg);
-      
-      if (type.equals("") || description.equals("") || name.equals("")) throw new InvalidXMLException;
-
+    return new Identifier(name, type, defaultValue, description, shortname, restrictions);
   }
 
   private String getArgParameter(String argParam, String arg) {
-    // try catch to see if arg is missing
     Pattern paramPattern =
         Pattern.compile(
             "[\r\n\\w\\d\\W\\D]*\\s*<"
@@ -79,7 +75,7 @@ public class XMLParser {
                 + argParam
                 + ">\\s*[\r\n\\w\\d\\W\\D]*");
     Matcher paramMatcher = paramPattern.matcher(arg);
-    boolean matches = paramMatcher.matches();
+    matches = paramMatcher.matches();
     if (matches) return paramMatcher.group(1);
     return "";
   }
@@ -90,8 +86,11 @@ public class XMLParser {
             "^\\s*<" + argListName + ">([\r\n\\w\\d\\W\\D]*)</" + argListName + ">\\s*$");
     Matcher paramListMatcher = paramListPattern.matcher(r);
     boolean paramListMatch = paramListMatcher.matches();
-    return paramListMatcher
-        .group(1)
-        .split("\\s*</" + argListName + ">\\s*<" + argListName + ">\\s*");
+    if (paramListMatch)
+      return paramListMatcher
+          .group(1)
+          .split("\\s*</" + argListName + ">\\s*<" + argListName + ">\\s*");
+
+    return new String[0];
   }
 }

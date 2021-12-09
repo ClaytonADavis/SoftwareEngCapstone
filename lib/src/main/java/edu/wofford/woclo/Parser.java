@@ -1,6 +1,7 @@
 package edu.wofford.woclo;
 
 import java.util.*;
+import java.util.regex.*;
 
 /**
  * This class takes and array of command line arguments and maps them to a list of identifiers
@@ -396,6 +397,22 @@ public class Parser {
    * @throws TooManyArgsException
    */
   public void parseCommandLine(String[] commandLine) {
+    String firstArg = "";
+    if (commandLine.length > 0) firstArg = commandLine[0];
+    Pattern isXMLPattern = Pattern.compile("^<\\?xml .*\\?>\\s*[\r\n\\w\\d\\W\\D]*");
+    Matcher isXMLMatcher = isXMLPattern.matcher(firstArg);
+    boolean isXML = isXMLMatcher.matches();
+    if (isXML) {
+      XMLParser XMLData = new XMLParser(firstArg);
+      for (Identifier p : XMLData.getPositionalIdentifiers()) identifiers.put(p.getName(), p);
+      for (Identifier o : XMLData.getOptionalIdentifiers()) {
+        optionalIdentifiers.put("--" + o.getName(), o);
+        if (o.getShortName().equals("")) optionalIdentifiers.put("-" + o.getShortName(), o);
+      }
+
+      commandLine = Arrays.copyOfRange(commandLine, 1, commandLine.length);
+    }
+
     if (getHelp(commandLine)) {
       constructHelpMsg();
       throw new HelpException();
