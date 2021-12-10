@@ -11,7 +11,7 @@ public class XMLParser {
   private ArrayList<Identifier> optionalIdentifiers;
   private boolean matches = false;
   private String regexStr =
-      "^<.*> \n<arguments>\\s*<positionalArgs>\\s*<positional>\\s*([\r\n\\w\\d\\W\\D]*)\\s*</positional>\\s*</positionalArgs>\\s*<namedArgs>\\s*<named>\\s*([\r\n\\w\\d\\W\\D]*)\\s*</named>\\s*</namedArgs>\\s*</arguments>$";
+      "^<.*>\\s*<arguments>\\s*<positionalArgs>\\s*<positional>\\s*([\r\n\\w\\d\\W\\D]*)\\s*</positional>\\s*</positionalArgs>\\s*<namedArgs>\\s*<named>\\s*([\r\n\\w\\d\\W\\D]*)\\s*</named>\\s*</namedArgs>\\s*</arguments>$";
 
   public boolean matches() {
     return matches;
@@ -57,8 +57,9 @@ public class XMLParser {
     description = getArgParameter("description", arg);
     name = getArgParameter("name", arg);
     shortname = getArgParameter("shortname", arg);
-    defaultValue = getParamList("default", arg)[0];
-    restrictions = getParamList("restrictions", arg);
+    String[] defaultVals = getParamList("value", getArgParameter("default", arg));
+    if (defaultVals.length > 0) defaultValue = defaultVals[0];
+    restrictions = getParamList("restriction", getArgParameter("restrictions", arg));
 
     if (type.equals("") || description.equals("") || name.equals(""))
       throw new InvalidXMLException();

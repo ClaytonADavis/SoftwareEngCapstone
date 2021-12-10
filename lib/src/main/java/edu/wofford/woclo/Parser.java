@@ -136,8 +136,6 @@ public class Parser {
     helpMsg += "show this help message and exit";
     for (String opIdName : optionalIdentifierNames) {
       // add argname and determine if boolean flag
-      // is bool used to account for extra whitespace in non-boolean named arguements. ie. --op OP
-      int isBool = 1;
       String shortLong = "";
       if (!optionalIdentifiers.get("--" + opIdName).getShortName().equals("")) {
         shortLong = "-" + optionalIdentifiers.get("--" + opIdName).getShortName();
@@ -150,12 +148,11 @@ public class Parser {
       if (optionalIdentifiers.get("--" + opIdName).getType() != "boolean") {
         shortLong += "--" + opIdName + " " + opIdName.toUpperCase();
         helpMsg += "\n " + shortLong;
-        isBool = 2;
       } else {
         shortLong += "--" + opIdName;
         helpMsg += "\n " + shortLong;
       }
-      // add whitespace. if is boolean multiply by isBool constant determined earlier
+      // add whitespace.
       for (int i = 0; i < maxArgLength - shortLong.length() + 1; i++) helpMsg += " ";
       // add type
       if (!optionalIdentifiers.get("--" + opIdName).getType().equals("boolean")) {
@@ -168,6 +165,11 @@ public class Parser {
       }
       // add description
       helpMsg += optionalIdentifiers.get("--" + opIdName).getDescription();
+      // add restrictions and default
+      String restrictions = optionalIdentifiers.get("--" + opIdName).getRestrictedValueString();
+      if (!restrictions.equals("")) helpMsg += " {" + restrictions + "}";
+      String defaultValue = optionalIdentifiers.get("--" + opIdName).getDefault();
+      if (!defaultValue.equals("")) helpMsg += " (default: " + defaultValue + ")";
     }
   }
 
@@ -404,10 +406,14 @@ public class Parser {
     boolean isXML = isXMLMatcher.matches();
     if (isXML) {
       XMLParser XMLData = new XMLParser(firstArg);
-      for (Identifier p : XMLData.getPositionalIdentifiers()) identifiers.put(p.getName(), p);
+      for (Identifier p : XMLData.getPositionalIdentifiers()) {
+        identifiers.put(p.getName(), p);
+        identifierNames.add(p.getName());
+      }
       for (Identifier o : XMLData.getOptionalIdentifiers()) {
         optionalIdentifiers.put("--" + o.getName(), o);
-        if (o.getShortName().equals("")) optionalIdentifiers.put("-" + o.getShortName(), o);
+        optionalIdentifierNames.add(o.getName());
+        if (!o.getShortName().equals("")) optionalIdentifiers.put("-" + o.getShortName(), o);
       }
 
       commandLine = Arrays.copyOfRange(commandLine, 1, commandLine.length);

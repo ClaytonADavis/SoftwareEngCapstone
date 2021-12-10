@@ -34,13 +34,9 @@ public class HeatedField {
         new String[] {"1", "2", "3", "4", "5", "6", "7", "8"});
 
     parse.addOptionalIdentifier(
-        "temperature",
-        "the initial temperature of internal cells (default: 32.0)",
-        "float",
-        "32.0",
-        "t");
+        "temperature", "the initial temperature of internal cells", "float", "32.0", "t");
     parse.addOptionalIdentifier(
-        "minutes", "the number of minutes to apply heating (default: 10)", "integer", "10", "m");
+        "minutes", "the number of minutes to apply heating", "integer", "10", "m");
 
     try {
       parse.parseCommandLine(args);

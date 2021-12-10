@@ -10,7 +10,7 @@ public class Identifier<T> {
   private String description;
   private String errMsge;
   private String shortName;
-  private Set<String> restrictedValues;
+  private String[] restrictedValues;
 
   public Identifier() {
     name = "";
@@ -19,7 +19,7 @@ public class Identifier<T> {
     description = "";
     errMsge = "";
     shortName = "";
-    restrictedValues = new HashSet<String>();
+    restrictedValues = new String[0];
   }
 
   public Identifier(String name, String type, String value, String description) {
@@ -29,7 +29,7 @@ public class Identifier<T> {
     this.description = description;
     errMsge = "";
     this.shortName = "";
-    this.restrictedValues = new HashSet<String>();
+    this.restrictedValues = new String[0];
   }
 
   public Identifier(String name, String type, String value, String description, String shortName) {
@@ -39,7 +39,7 @@ public class Identifier<T> {
     this.description = description;
     errMsge = "";
     this.shortName = shortName;
-    this.restrictedValues = new HashSet<String>();
+    this.restrictedValues = new String[0];
   }
 
   public Identifier(
@@ -55,9 +55,7 @@ public class Identifier<T> {
     this.description = description;
     errMsge = "";
     this.shortName = shortName;
-    this.restrictedValues = new HashSet<String>();
-    for (int i = 0; i < restrictedValues.length; i++)
-      this.restrictedValues.add(restrictedValues[i]);
+    this.restrictedValues = restrictedValues;
   }
 
   public String getName() {
@@ -116,14 +114,23 @@ public class Identifier<T> {
 
   public String getRestrictedValueString() {
     String output = "";
-    for (String s : restrictedValues) {
-      output += s;
-      output += ", ";
+    for (int i = 0; i < restrictedValues.length; i++) {
+      output += restrictedValues[i];
+      if (i < restrictedValues.length - 1) output += ", ";
     }
-    return output.substring(0, output.length() - 2);
+
+    return output;
   }
 
   public boolean isRestrictedValue(String arg) {
-    return restrictedValues.contains(arg) || restrictedValues.isEmpty();
+    boolean contains = false;
+    for (int i = 0; i < restrictedValues.length; i++)
+      contains = contains | restrictedValues[i].equals(arg);
+    return contains || restrictedValues.length == 0;
+  }
+
+  public String getDefault() {
+    if (value.equals("false")) return "";
+    return value;
   }
 }

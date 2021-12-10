@@ -13,10 +13,8 @@ public class TilingAssistant {
     // values to be determined by command line input
     parse.addIdentifier("length", "the length of the room", "float");
     parse.addIdentifier("width", "the width of the room", "float");
-    parse.addOptionalIdentifier(
-        "tilesize", "the size of the square tile (default: 6.0)", "float", "6.0f", "s");
-    parse.addOptionalIdentifier(
-        "groutgap", "the width of the grout gap (default: 0.5)", "float", "0.5f", "g");
+    parse.addOptionalIdentifier("tilesize", "the size of the square tile", "float", "6.0", "s");
+    parse.addOptionalIdentifier("groutgap", "the width of the grout gap", "float", "0.5", "g");
     parse.addOptionalIdentifier(
         "metric", "use centimeters instead of inches", "boolean", "false", "m");
     parse.addOptionalIdentifier(
