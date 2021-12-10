@@ -15,7 +15,7 @@ public class VolumeCalculator {
 
     Parser p = new Parser("VolumeCalculator", "Calculate the volume.");
     try {
-      p.parseCommandLine(args);
+      p.parseCommandLine(args, true);
     } catch (TooManyArgsException e) {
       return;
     } catch (NotEnoughArgsException e) {

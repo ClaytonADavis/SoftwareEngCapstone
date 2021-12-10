@@ -1,7 +1,6 @@
 package edu.wofford.woclo;
 
 import java.util.*;
-import java.util.regex.*;
 
 /**
  * This class takes and array of command line arguments and maps them to a list of identifiers
@@ -388,6 +387,22 @@ public class Parser {
     optionalIdentifierNames.add(id);
   }
 
+  public void parseCommandLine(String[] commandLine) {
+    parseArgList(commandLine, false, false);
+  }
+
+  public void parseCommandLine(String[] commandLine, boolean readXML) {
+    parseArgList(commandLine, readXML, false);
+  }
+
+  public void parseCommandLine(String[] commandLine, boolean readXML, boolean writeXML) {
+    if (!readXML && writeXML) {
+      parseArgList(commandLine, true, writeXML);
+    } else {
+      parseArgList(commandLine, readXML, writeXML);
+    }
+  }
+
   /**
    * Maps a string array of command line values to their corresponding ids in a hashmap. throws
    * exceptions for if a help flag is present or if too few or too many arguments are given.
@@ -398,24 +413,29 @@ public class Parser {
    * @throws NotEnoughArgsException
    * @throws TooManyArgsException
    */
-  public void parseCommandLine(String[] commandLine) {
+  private void parseArgList(String[] commandLine, boolean readXML, boolean writeXML) {
     String firstArg = "";
+    String secondArg = "";
     if (commandLine.length > 0) firstArg = commandLine[0];
-    Pattern isXMLPattern = Pattern.compile("^<\\?xml .*\\?>\\s*[\r\n\\w\\d\\W\\D]*");
-    Matcher isXMLMatcher = isXMLPattern.matcher(firstArg);
-    boolean isXML = isXMLMatcher.matches();
-    if (isXML) {
-      XMLParser XMLData = new XMLParser(firstArg);
-      for (Identifier p : XMLData.getPositionalIdentifiers()) {
-        identifiers.put(p.getName(), p);
-        identifierNames.add(p.getName());
+    if (commandLine.length > 1) secondArg = commandLine[1];
+    if (readXML) {
+      XMLParser XMLData;
+      if (writeXML) {
+        XMLData = new XMLParser(firstArg, secondArg);
+        XMLData.writeXMLToFile();
+        return;
+      } else {
+        XMLData = new XMLParser(firstArg, "");
+        for (Identifier p : XMLData.getPositionalIdentifiers()) {
+          identifiers.put(p.getName(), p);
+          identifierNames.add(p.getName());
+        }
+        for (Identifier o : XMLData.getOptionalIdentifiers()) {
+          optionalIdentifiers.put("--" + o.getName(), o);
+          optionalIdentifierNames.add(o.getName());
+          if (!o.getShortName().equals("")) optionalIdentifiers.put("-" + o.getShortName(), o);
+        }
       }
-      for (Identifier o : XMLData.getOptionalIdentifiers()) {
-        optionalIdentifiers.put("--" + o.getName(), o);
-        optionalIdentifierNames.add(o.getName());
-        if (!o.getShortName().equals("")) optionalIdentifiers.put("-" + o.getShortName(), o);
-      }
-
       commandLine = Arrays.copyOfRange(commandLine, 1, commandLine.length);
     }
 
