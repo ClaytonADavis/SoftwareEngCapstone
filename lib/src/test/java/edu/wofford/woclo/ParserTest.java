@@ -2,6 +2,8 @@ package edu.wofford.woclo;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.*;
 
 public class ParserTest {
@@ -472,5 +474,33 @@ public class ParserTest {
       assert (true);
       return;
     }
+  }
+
+  @Test
+  public void testParseCommandLineReadXML() {
+    Parser parse = new Parser("test", "test_usage");
+    String[] command = {
+      "<?xml version=\"1.0\"?> \n<arguments>\n  <positionalArgs>\n    <positional>\n      <type>integer</type>\n      <description>the length of the volume</description>\n      <name>length</name>\n    </positional>\n    <positional>\n      <name>width</name>\n      <type>integer</type>\n      <description>the width of the volume</description>\n    </positional>\n    <positional>\n      <description>the height of the volume</description>\n      <name>height</name>\n      <type>integer</type>\n    </positional>\n  </positionalArgs>\n  <namedArgs>\n    <named>\n      <description>the type of volume</description>\n      <shortname>t</shortname>\n      <type>string</type>\n      <name>type</name>\n      <restrictions>\n        <restriction>box</restriction>\n        <restriction>pyramid</restriction>\n        <restriction>ellipsoid</restriction>\n      </restrictions>\n    </named>\n    <named>\n      <default>\n        <value>4</value>\n      </default>\n      <type>integer</type>\n      <description>the maximum number of decimal places for the volume</description>\n      <name>precision</name>\n      <shortname>p</shortname>\n    </named>\n  </namedArgs>\n</arguments>",
+      "7",
+      "8",
+      "0"
+    };
+    parse.parseCommandLine(command, true);
+    int i = parse.getValue("height");
+    assertEquals(0, i);
+  }
+
+  @Test
+  public void testParseCommandLineWriteXML() {
+    Parser parse = new Parser("test", "test_usage");
+    String[] command = {
+      "<?xml version=\"1.0\"?> \n<arguments>\n  <positionalArgs>\n    <positional>\n      <type>integer</type>\n      <description>the length of the volume</description>\n      <name>length</name>\n    </positional>\n    <positional>\n      <name>width</name>\n      <type>integer</type>\n      <description>the width of the volume</description>\n    </positional>\n    <positional>\n      <description>the height of the volume</description>\n      <name>height</name>\n      <type>integer</type>\n    </positional>\n  </positionalArgs>\n  <namedArgs>\n    <named>\n      <description>the type of volume</description>\n      <shortname>t</shortname>\n      <type>string</type>\n      <name>type</name>\n      <restrictions>\n        <restriction>box</restriction>\n        <restriction>pyramid</restriction>\n        <restriction>ellipsoid</restriction>\n      </restrictions>\n    </named>\n    <named>\n      <default>\n        <value>4</value>\n      </default>\n      <type>integer</type>\n      <description>the maximum number of decimal places for the volume</description>\n      <name>precision</name>\n      <shortname>p</shortname>\n    </named>\n  </namedArgs>\n</arguments>",
+      "7",
+      "8",
+      "0"
+    };
+    parse.parseCommandLine(command, true, true);
+    Path path = Paths.get("testfile.xml");
+    assertEquals("testfile.xml", path.toString());
   }
 }
