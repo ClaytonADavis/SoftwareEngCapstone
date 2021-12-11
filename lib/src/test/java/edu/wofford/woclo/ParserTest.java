@@ -188,7 +188,7 @@ public class ParserTest {
       parse.parseCommandLine(command);
     } catch (HelpException e) {
       assertEquals(
-          "usage: java test [-h] [--argopt ARGOPT] arg1 arg2\n\ntest_usage\n\npositional arguments:\n arg1             (string)      test_description1\n arg2             (string)      test_description2\n\nnamed arguments:\n -h, --help       show this help message and exit\n --argopt ARGOPT  (string)      opt_desc",
+          "usage: java test [-h] [--argopt ARGOPT] arg1 arg2\n\ntest_usage\n\npositional arguments:\n arg1             (string)      test_description1\n arg2             (string)      test_description2\n\nnamed arguments:\n -h, --help       show this help message and exit\n --argopt ARGOPT  (string)      opt_desc (default: default)",
           parse.getHelpMessage());
       return;
     }
@@ -264,5 +264,213 @@ public class ParserTest {
     String[] command = {"-st"};
     parse.parseCommandLine(command);
     assertEquals(true, parse.getValue("tester"));
+  }
+
+  @Test
+  public void testConstructHelpMsgOptNotBolShort() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("arg1", "test_description1");
+    parse.addIdentifier("arg2", "test_description2");
+    parse.addOptionalIdentifier("argopt", "opt_desc", "string", "default", "a");
+    String[] command = {"5", "7", "--help"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (HelpException e) {
+      assertEquals(
+          "usage: java test [-h] [-a ARGOPT] arg1 arg2\n\ntest_usage\n\npositional arguments:\n arg1                        (string)      test_description1\n arg2                        (string)      test_description2\n\nnamed arguments:\n -h, --help                  show this help message and exit\n -a ARGOPT, --argopt ARGOPT  (string)      opt_desc (default: default)",
+          parse.getHelpMessage());
+      return;
+    }
+    assert (false);
+  }
+
+  @Test
+  public void testRestrictedValuesString() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier(
+        "short", "test_description", "string", "false", "s", new String[] {"r1", "r2", "r3"});
+    String[] command = {"-s", "r1"};
+    parse.parseCommandLine(command);
+    assertEquals("r1", parse.getValue("short"));
+  }
+
+  @Test
+  public void testRestrictedValuesStringFalse() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier(
+        "short", "test_description", "string", "false", "s", new String[] {"r1", "r2", "r3"});
+    String[] command = {"-s", "r7"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (InformativeException e) {
+      assert (true);
+      return;
+    }
+  }
+
+  @Test
+  public void testRestrictedValuesInt() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier(
+        "short", "test_description", "integer", "false", "s", new int[] {1, 2, 3});
+    String[] command = {"-s", "1"};
+    parse.parseCommandLine(command);
+    int i = parse.getValue("short");
+    assertEquals(1, i);
+  }
+
+  @Test
+  public void testRestrictedValuesIntFalse() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier(
+        "short", "test_description", "integer", "false", "s", new int[] {1, 2, 3});
+    String[] command = {"-s", "7"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (InformativeException e) {
+      assert (true);
+      return;
+    }
+  }
+
+  @Test
+  public void testRestrictedValuesFloat() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier(
+        "short", "test_description", "float", "false", "s", new float[] {1f, 2f, 3f});
+    String[] command = {"-s", "1.0"};
+    parse.parseCommandLine(command);
+    float i = parse.getValue("short");
+    assertEquals(1.0, i);
+  }
+
+  @Test
+  public void testRestrictedValuesFloatFalse() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier(
+        "short", "test_description", "float", "false", "s", new float[] {1f, 2f, 3f});
+    String[] command = {"-s", "7f"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (InformativeException e) {
+      assert (true);
+      return;
+    }
+  }
+
+  @Test
+  public void testRestrictedValuesBool() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier(
+        "short", "test_description", "boolean", "false", "s", new boolean[] {true});
+    String[] command = {"-s"};
+    parse.parseCommandLine(command);
+    boolean i = parse.getValue("short");
+    assertEquals(true, i);
+  }
+
+  @Test
+  public void testRestrictedValuesBoolFalse() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addOptionalIdentifier(
+        "short", "test_description", "boolean", "false", "s", new boolean[] {false});
+    String[] command = {"-s"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (InformativeException e) {
+      assert (true);
+      return;
+    }
+  }
+
+  @Test
+  public void testRestrictedValuesStringPos() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("tester", "test_description", "string", new String[] {"r1", "r2", "r3"});
+    String[] command = {"r1"};
+    parse.parseCommandLine(command);
+    assertEquals("r1", parse.getValue("tester"));
+  }
+
+  @Test
+  public void testRestrictedValuesStringFalsePos() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("testeer", "test_description", "string", new String[] {"r1", "r2", "r3"});
+    String[] command = {"r7"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (InformativeException e) {
+      assert (true);
+      return;
+    }
+  }
+
+  @Test
+  public void testRestrictedValuesIntPos() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("tester", "test_description", "integer", new int[] {1, 2, 3});
+    String[] command = {"1"};
+    parse.parseCommandLine(command);
+    int i = parse.getValue("tester");
+    assertEquals(1, i);
+  }
+
+  @Test
+  public void testRestrictedValuesIntFalsePos() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("tester", "test_description", "integer", new int[] {1, 2, 3});
+    String[] command = {"7"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (InformativeException e) {
+      assert (true);
+      return;
+    }
+  }
+
+  @Test
+  public void testRestrictedValuesFloatPos() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("tester", "test_description", "float", new float[] {1f, 2f, 3f});
+    String[] command = {"1.0"};
+    parse.parseCommandLine(command);
+    float i = parse.getValue("tester");
+    assertEquals(1.0, i);
+  }
+
+  @Test
+  public void testRestrictedValuesFloatFalsePos() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("tester", "test_description", "float", new float[] {1f, 2f, 3f});
+    String[] command = {"7f"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (InformativeException e) {
+      assert (true);
+      return;
+    }
+  }
+
+  @Test
+  public void testRestrictedValuesBoolPos() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("tester", "test_description", "boolean", new boolean[] {true});
+    String[] command = {"true"};
+    parse.parseCommandLine(command);
+    boolean i = parse.getValue("tester");
+    assertEquals(true, i);
+  }
+
+  @Test
+  public void testRestrictedValuesBoolFalsePos() {
+    Parser parse = new Parser("test", "test_usage");
+    parse.addIdentifier("tester", "test_description", "boolean", new boolean[] {false});
+    String[] command = {"true"};
+    try {
+      parse.parseCommandLine(command);
+    } catch (InformativeException e) {
+      assert (true);
+      return;
+    }
   }
 }
