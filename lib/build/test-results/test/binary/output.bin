@@ -1,9 +1,0 @@
-+test error: the argument Arg4 is required.
--test error: the value 5 matches no argument.
- test error: no value for argopt
- /test error: the value s is not of type integer
- -test error: the value a is not of type float
- /test error: the value s is not of type integer
-%8test error: tester value 7 is not a member of [1, 2, 3]
-'?test error: tester value 7f is not a member of [1.0, 2.0, 3.0]
-)=test error: testeer value r7 is not a member of [r1, r2, r3]

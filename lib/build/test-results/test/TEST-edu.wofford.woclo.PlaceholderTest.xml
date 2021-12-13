@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="edu.wofford.woclo.PlaceholderTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-12-13T00:41:23" hostname="b56cb617a0fb" time="0.001">
-  <properties/>
-  <testcase name="testSomething()" classname="edu.wofford.woclo.PlaceholderTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

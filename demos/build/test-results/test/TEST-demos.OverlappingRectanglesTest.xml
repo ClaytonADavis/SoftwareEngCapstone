@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="demos.OverlappingRectanglesTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2021-12-13T00:41:02" hostname="b56cb617a0fb" time="0.004">
-  <properties/>
-  <testcase name="testIntersectingArea()" classname="demos.OverlappingRectanglesTest" time="0.002"/>
-  <testcase name="testTotalArea()" classname="demos.OverlappingRectanglesTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

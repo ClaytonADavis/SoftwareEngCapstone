@@ -1,15 +1,16 @@
+package demos;
 
-import java.util.*;
+import edu.wofford.woclo.*;
 import java.awt.*;
+import java.util.*;
 
 public class WordSearch {
   private int width = 5;
   private int height = 5;
   private char[][] grid;
   private ArrayList<Point> path;
-  private int [][] solution;
+  private int[][] solution;
   int numVisit;
-
 
   public WordSearch(String grid) {
     path = new ArrayList<Point>();
@@ -52,7 +53,6 @@ public class WordSearch {
       return false;
     }
 
-
     if (target.length() == 1) {
       solution[row][col] = numVisit++;
       return true;
@@ -60,14 +60,13 @@ public class WordSearch {
 
     solution[row][col] = numVisit++;
 
-
     if (row + 1 < grid.length && searchWord(target.substring(1), row + 1, col)) {
       return true;
     }
     if (row - 1 >= 0 && searchWord(target.substring(1), row - 1, col)) {
       return true;
     }
-     if (col + 1 < grid[0].length && searchWord(target.substring(1), row, col + 1)) {
+    if (col + 1 < grid[0].length && searchWord(target.substring(1), row, col + 1)) {
       return true;
     }
     if (col - 1 >= 0 && searchWord(target.substring(1), row, col - 1)) {
@@ -78,7 +77,6 @@ public class WordSearch {
     numVisit = numVisit - 1;
     return false;
   }
-  
 
   private boolean exist(String target) {
     for (int i = 0; i < grid.length; i++) {
@@ -115,25 +113,23 @@ public class WordSearch {
     for (int i = 0; i < numEle; i++) {
       double xT = path.get(i).getX();
       double yT = path.get(i).getY();
-      int x = (int)xT;
-      int y = (int)yT;
+      int x = (int) xT;
+      int y = (int) yT;
       char c = target.charAt(i);
       String letter = String.valueOf(c);
       if (i == numEle - 1) {
         s = s + letter + ":" + x + "," + y;
       } else {
-        s = s + letter + ":" + x + "," + y + " ";}
+        s = s + letter + ":" + x + "," + y + " ";
+      }
     }
     return s;
   }
 
-
-
   public String findWord(String target) {
     if (exist(target)) {
       return toString(target);
-    } 
-    else {
+    } else {
       return (target + " not found");
     }
   }
@@ -142,8 +138,8 @@ public class WordSearch {
     Parser parse = new Parser("WordSearch", "Find a target word in a grid.");
     parse.addIdentifier("grid", "the grid to search", "string");
     parse.addIdentifier("target", "the target word", "string");
-    parse.addOptionalIdentifier("width", "the grid width (default: 5)", "integer", "5");
-    parse.addOptionalIdentifier("height", "the grid height (default: 5)", "integer", "5");
+    parse.addOptionalIdentifier("width", "the grid width", "integer", "5");
+    parse.addOptionalIdentifier("height", "the grid height", "integer", "5");
     try {
       parse.parseCommandLine(args);
     } catch (TooManyArgsException e) {
@@ -168,47 +164,18 @@ public class WordSearch {
     } catch (IncorrectArgumentTypeException e) {
       return;
     }
-    // TODO implement parser library to set gridString, word, width, and height based off of values
-    // pulled from command line
-
-    WordSearch test = new WordSearch(grid, width, height);
-    // System.out.println(test.findWord(target));
-    // System.out.println(test.getGridString());
-    // System.out.println(test.findWord(word));
-    // System.out.println(test.getPathString());
-
-    String s1 = test.findWord(target);
-    String rs1 = "";
-    for (int i = 0; i < target.length(); i++) {
-      rs1 += String.valueOf(target.charAt(target.length() - i - 1));
-      // .add(p2.get(p2.size() - i - 1));
-    }
-    WordSearch test2 = new WordSearch(grid, width, height);
-    // System.out.println(test2.findWord(rs1));
-    String s2 = test2.findWord(rs1);
-
-    ArrayList<int[]> p1 = test.getPath();
-    ArrayList<int[]> p2 = test2.getPath();
-    if (p1.size() == 0 && p2.size() > 0) {
-      ArrayList<int[]> rp2 = new ArrayList<int[]>();
-      for (int i = 0; i < p2.size(); i++) {
-        p1.add(p2.get(p2.size() - i - 1));
-      }
-      System.out.println(test.getPathString2(p1));
+    if (width * height != grid.length()) {
+      System.out.println(
+          "WordSearch error: grid dimensions ("
+              + width
+              + " x "
+              + height
+              + ") do not match grid length ("
+              + grid.length()
+              + ")");
     } else {
-
-      int s = p1.size();
-
-      ArrayList<int[]> p = new ArrayList<int[]>();
-      for (int i = 0; i < s; i++) {
-        for (int j = 0; j < p2.size(); j++) {
-          if (p1.get(i)[0] == p2.get(j)[0] && p1.get(i)[1] == p2.get(j)[1]) {
-            p.add(p1.get(i));
-          }
-        }
-      }
-
-      System.out.println(test.getPathString2(p));
+      WordSearch searcher = new WordSearch(grid, width, height);
+      System.out.println(searcher.findWord(target));
     }
   }
 }
