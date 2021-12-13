@@ -1,106 +1,141 @@
-package demos;
 
-import edu.wofford.woclo.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.awt.*;
 
 public class WordSearch {
   private int width = 5;
   private int height = 5;
   private char[][] grid;
-  private ArrayList<int[]> path;
+  private ArrayList<Point> path;
+  private int [][] solution;
+  int numVisit;
+
 
   public WordSearch(String grid) {
-    path = new ArrayList<int[]>();
+    path = new ArrayList<Point>();
+    numVisit = 1;
     this.grid = new char[height][width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         this.grid[i][j] = grid.charAt(width * i + j);
+      }
+    }
+    this.solution = new int[height][width];
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        this.solution[i][j] = 0;
       }
     }
   }
 
   public WordSearch(String grid, int width, int height) {
     this.width = width;
+    numVisit = 1;
     this.height = height;
-    path = new ArrayList<int[]>();
+    path = new ArrayList<Point>();
     this.grid = new char[height][width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         this.grid[i][j] = grid.charAt(width * i + j);
       }
     }
-  }
-
-  private boolean locationNotOnPath(int x, int y) {
-    for (int i = 0; i < path.size(); i++) {
-      if (path.get(i)[0] == x && path.get(i)[1] == y) return false;
+    this.solution = new int[height][width];
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        this.solution[i][j] = 0;
+      }
     }
-    return true;
   }
 
-  private boolean isLetterAtLocation(char letter, int x, int y) {
-    if (x < 0 || y < 0 || y >= width || x >= height) {
+  private boolean searchWord(String target, int row, int col) {
+    if (solution[row][col] != 0 || target.charAt(0) != grid[row][col]) {
       return false;
-    } else if (grid[x][y] == letter && locationNotOnPath(x, y)) {
-      path.add(new int[] {x, y});
+    }
+
+
+    if (target.length() == 1) {
+      solution[row][col] = numVisit++;
       return true;
+    }
+
+    solution[row][col] = numVisit++;
+
+
+    if (row + 1 < grid.length && searchWord(target.substring(1), row + 1, col)) {
+      return true;
+    }
+    if (row - 1 >= 0 && searchWord(target.substring(1), row - 1, col)) {
+      return true;
+    }
+     if (col + 1 < grid[0].length && searchWord(target.substring(1), row, col + 1)) {
+      return true;
+    }
+    if (col - 1 >= 0 && searchWord(target.substring(1), row, col - 1)) {
+      return true;
+    }
+
+    solution[row][col] = 0;
+    numVisit = numVisit - 1;
+    return false;
+  }
+  
+
+  private boolean exist(String target) {
+    for (int i = 0; i < grid.length; i++) {
+      for (int j = 0; j < grid[0].length; j++) {
+        if (searchWord(target, i, j)) {
+          return true;
+        }
+      }
     }
     return false;
   }
 
-  private boolean findWordAtLocation(String word, int x, int y) {
-    if (word.length() == 1) {
-      if (isLetterAtLocation(word.charAt(0), y, x)) {
-        return true;
-      }
-      return false;
-    } else {
-      return isLetterAtLocation(word.charAt(0), y, x)
-          && (findWordAtLocation(word.substring(1), x + 1, y)
-              || findWordAtLocation(word.substring(1), x - 1, y)
-              || findWordAtLocation(word.substring(1), x, y + 1)
-              || findWordAtLocation(word.substring(1), x, y - 1));
-    }
-  }
-
-  public String findWord(String word) {
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        path.clear();
-        if (findWordAtLocation(word, i, j)) {
-          return getPathString();
+  private Point findPoint(int element) {
+    int row = 0;
+    int col = 0;
+    for (int i = 0; i < solution.length; i++) {
+      for (int j = 0; j < solution[0].length; j++) {
+        if (solution[i][j] == element) {
+          row = i + 1;
+          col = j + 1;
         }
       }
     }
-    return (word + " not found");
+    Point z = new Point(row, col);
+    return z;
   }
 
-  private String getPathString() {
-    StringBuffer output = new StringBuffer();
-    int x, y;
-    for (int i = 0; i < path.size(); i++) {
-      x = path.get(i)[0];
-      y = path.get(i)[1];
-      output.append(grid[x][y] + ":" + Integer.toString(x + 1) + "," + Integer.toString(y + 1));
-      if (i < path.size() - 1) output.append(" ");
+  private String toString(String target) {
+    String s = "";
+    for (int i = 1; i <= target.length(); i++) {
+      path.add(findPoint(i));
     }
-    return output.toString();
-  }
-
-  public String getPathString2(ArrayList<int[]> p) {
-    StringBuffer output = new StringBuffer();
-    int x, y;
-    for (int i = 0; i < p.size(); i++) {
-      x = p.get(i)[0];
-      y = p.get(i)[1];
-      output.append(grid[x][y] + ":" + Integer.toString(x + 1) + "," + Integer.toString(y + 1));
-      if (i < p.size() - 1) output.append(" ");
+    int numEle = path.size();
+    for (int i = 0; i < numEle; i++) {
+      double xT = path.get(i).getX();
+      double yT = path.get(i).getY();
+      int x = (int)xT;
+      int y = (int)yT;
+      char c = target.charAt(i);
+      String letter = String.valueOf(c);
+      if (i == numEle - 1) {
+        s = s + letter + ":" + x + "," + y;
+      } else {
+        s = s + letter + ":" + x + "," + y + " ";}
     }
-    return output.toString();
+    return s;
   }
 
-  public ArrayList<int[]> getPath() {
-    return path;
+
+
+  public String findWord(String target) {
+    if (exist(target)) {
+      return toString(target);
+    } 
+    else {
+      return (target + " not found");
+    }
   }
 
   public static void main(String... args) {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="edu.wofford.woclo.IdentifierTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2021-12-13T00:41:22" hostname="b56cb617a0fb" time="0.079">
+  <properties/>
+  <testcase name="testErrorMessage()" classname="edu.wofford.woclo.IdentifierTest" time="0.041"/>
+  <testcase name="testAddDataInt()" classname="edu.wofford.woclo.IdentifierTest" time="0.001"/>
+  <testcase name="testAddData()" classname="edu.wofford.woclo.IdentifierTest" time="0.0"/>
+  <testcase name="testShortName()" classname="edu.wofford.woclo.IdentifierTest" time="0.001"/>
+  <testcase name="tesDefaulttConstructer()" classname="edu.wofford.woclo.IdentifierTest" time="0.001"/>
+  <testcase name="testRestrictedValString()" classname="edu.wofford.woclo.IdentifierTest" time="0.001"/>
+  <testcase name="testIsRestrictedValueFalse()" classname="edu.wofford.woclo.IdentifierTest" time="0.001"/>
+  <testcase name="testIsRestrictedValueTrue()" classname="edu.wofford.woclo.IdentifierTest" time="0.001"/>
+  <testcase name="testDataTypeException()" classname="edu.wofford.woclo.IdentifierTest" time="0.0"/>
+  <testcase name="testDataTypeExceptionInt()" classname="edu.wofford.woclo.IdentifierTest" time="0.0"/>
+  <testcase name="testAddDataFloat()" classname="edu.wofford.woclo.IdentifierTest" time="0.001"/>
+  <testcase name="testConstructer()" classname="edu.wofford.woclo.IdentifierTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

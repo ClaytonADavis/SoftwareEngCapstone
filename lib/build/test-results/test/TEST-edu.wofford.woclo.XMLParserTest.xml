@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="edu.wofford.woclo.XMLParserTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2021-12-13T00:41:23" hostname="b56cb617a0fb" time="0.093">
+  <properties/>
+  <testcase name="testParseXMLInvalidXMLNoMatch()" classname="edu.wofford.woclo.XMLParserTest" time="0.001"/>
+  <testcase name="testParseXMLInvalidXMLNoName()" classname="edu.wofford.woclo.XMLParserTest" time="0.001"/>
+  <testcase name="testParseXMLInvalidXMLNoType()" classname="edu.wofford.woclo.XMLParserTest" time="0.057"/>
+  <testcase name="testParseXMLPositionalCount()" classname="edu.wofford.woclo.XMLParserTest" time="0.005"/>
+  <testcase name="testParseXMLOptionalCount()" classname="edu.wofford.woclo.XMLParserTest" time="0.005"/>
+  <testcase name="testParseXMLInvalidXMLNoDescription()" classname="edu.wofford.woclo.XMLParserTest" time="0.001"/>
+  <testcase name="testParseXMLPositionalId()" classname="edu.wofford.woclo.XMLParserTest" time="0.005"/>
+  <testcase name="testParseXMLOptionalIdName()" classname="edu.wofford.woclo.XMLParserTest" time="0.004"/>
+  <testcase name="testParseXMLWrite()" classname="edu.wofford.woclo.XMLParserTest" time="0.001"/>
+  <testcase name="testParseXMLOptionalIdType()" classname="edu.wofford.woclo.XMLParserTest" time="0.004"/>
+  <testcase name="testParseXMLPositionalArgs()" classname="edu.wofford.woclo.XMLParserTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

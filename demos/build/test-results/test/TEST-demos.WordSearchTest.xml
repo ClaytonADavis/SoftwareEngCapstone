@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="demos.WordSearchTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2021-12-13T00:41:02" hostname="b56cb617a0fb" time="0.027">
+  <properties/>
+  <testcase name="testFindWordSpace()" classname="demos.WordSearchTest" time="0.011"/>
+  <testcase name="testFindWordLetter()" classname="demos.WordSearchTest" time="0.001"/>
+  <testcase name="testFindWordNotFound()" classname="demos.WordSearchTest" time="0.001"/>
+  <testcase name="testFindWord()" classname="demos.WordSearchTest" time="0.001"/>
+  <testcase name="testFindWord2()" classname="demos.WordSearchTest" time="0.001"/>
+  <testcase name="testFindWord3()" classname="demos.WordSearchTest" time="0.001"/>
+  <testcase name="testFindWord4()" classname="demos.WordSearchTest" time="0.003"/>
+  <testcase name="testFindWordLoop()" classname="demos.WordSearchTest" time="0.001"/>
+  <testcase name="testFindWordCap()" classname="demos.WordSearchTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

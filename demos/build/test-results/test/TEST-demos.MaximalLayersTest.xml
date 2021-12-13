@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="demos.MaximalLayersTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2021-12-13T00:41:02" hostname="b56cb617a0fb" time="0.016">
+  <properties/>
+  <testcase name="testMaximalLayers()" classname="demos.MaximalLayersTest" time="0.009"/>
+  <testcase name="testMaximalLayersXTrue()" classname="demos.MaximalLayersTest" time="0.001"/>
+  <testcase name="testMaximalLayersYTrue()" classname="demos.MaximalLayersTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="edu.wofford.woclo.ParserTest" tests="36" skipped="0" failures="0" errors="0" timestamp="2021-12-13T00:41:23" hostname="b56cb617a0fb" time="0.13">
+  <properties/>
+  <testcase name="testNotEnoughArgsException()" classname="edu.wofford.woclo.ParserTest" time="0.014"/>
+  <testcase name="testTooManyArgsException()" classname="edu.wofford.woclo.ParserTest" time="0.003"/>
+  <testcase name="testConstructHelpMsg()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testConstructHelpMsgOptNotBol()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testRestrictedValuesBool()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testAddIdWType()" classname="edu.wofford.woclo.ParserTest" time="0.002"/>
+  <testcase name="testOptionalIden()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testShortForm()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testShortFormMultiple()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testShortFormMultipleFlags()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testConstructHelpMsgOptNotBolShort()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testParseCommandLineReadXML()" classname="edu.wofford.woclo.ParserTest" time="0.068"/>
+  <testcase name="testMissingOptionalValues()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testRestrictedValuesFloatPos()" classname="edu.wofford.woclo.ParserTest" time="0.002"/>
+  <testcase name="testConstructHelpMsgOpt()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testRestrictedValuesBoolFalse()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testRestrictedValuesBoolFalsePos()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testOptionalValuesInt()" classname="edu.wofford.woclo.ParserTest" time="0.002"/>
+  <testcase name="testRestrictedValuesInt()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testRestrictedValuesIntPos()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testAddIdentifier()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testRestrictedValuesBoolPos()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testRestrictedValuesIntFalsePos()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testRestrictedValuesString()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testRestrictedValuesFloatFalsePos()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testOptionalValuesBool()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testRestrictedValuesStringFalsePos()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testParseCommandLine()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testRestrictedValuesStringPos()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testRestrictedValuesStringFalse()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testOptInMiddle()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testRestrictedValuesFloat()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testParseCommandLineWriteXML()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <testcase name="testRestrictedValuesIntFalse()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testHelpDefault()" classname="edu.wofford.woclo.ParserTest" time="0.0"/>
+  <testcase name="testRestrictedValuesFloatFalse()" classname="edu.wofford.woclo.ParserTest" time="0.001"/>
+  <system-out><![CDATA[test error: the argument Arg4 is required.
+test error: the value 5 matches no argument.
+test error: no value for argopt
+test error: the value s is not of type integer
+test error: the value a is not of type float
+test error: the value s is not of type integer
+test error: tester value 7 is not a member of [1, 2, 3]
+test error: tester value 7f is not a member of [1.0, 2.0, 3.0]
+test error: testeer value r7 is not a member of [r1, r2, r3]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
