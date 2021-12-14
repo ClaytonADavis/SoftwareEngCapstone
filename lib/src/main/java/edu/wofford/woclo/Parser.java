@@ -303,8 +303,7 @@ public class Parser {
    */
   public void addIdentifier(
       String identifierName, String description, String type, String[] restrictedValues) {
-    Identifier Iden =
-        new Identifier(identifierName, "string", "", description, "", restrictedValues);
+    Identifier Iden = new Identifier(identifierName, type, "", description, "", restrictedValues);
     identifiers.put(identifierName, Iden);
     identifierNames.add(identifierName);
   }
@@ -323,7 +322,7 @@ public class Parser {
       String identifierName, String description, String type, int[] restrictedValues) {
     String[] temp = new String[restrictedValues.length];
     for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
-    Identifier Iden = new Identifier(identifierName, "integer", "", description, "", temp);
+    Identifier Iden = new Identifier(identifierName, type, "", description, "", temp);
     identifiers.put(identifierName, Iden);
     identifierNames.add(identifierName);
   }
@@ -342,7 +341,7 @@ public class Parser {
       String identifierName, String description, String type, float[] restrictedValues) {
     String[] temp = new String[restrictedValues.length];
     for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
-    Identifier Iden = new Identifier(identifierName, "float", "", description, "", temp);
+    Identifier Iden = new Identifier(identifierName, type, "", description, "", temp);
     identifiers.put(identifierName, Iden);
     identifierNames.add(identifierName);
   }
@@ -359,7 +358,7 @@ public class Parser {
    */
   public void addIdentifier(
       String identifierName, String description, String type, boolean[] restrictedValues) {
-    Identifier Iden = new Identifier(identifierName, "boolean", "", description, "", new String[0]);
+    Identifier Iden = new Identifier(identifierName, type, "", description, "", new String[0]);
     identifiers.put(identifierName, Iden);
     identifierNames.add(identifierName);
   }
@@ -444,8 +443,7 @@ public class Parser {
       int[] restrictedValues) {
     String[] temp = new String[restrictedValues.length];
     for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
-    Identifier Iden =
-        new Identifier(identifierName, "integer", Default, description, shortId, temp);
+    Identifier Iden = new Identifier(identifierName, type, Default, description, shortId, temp);
     optionalIdentifiers.put("--" + identifierName, Iden);
     optionalIdentifiers.put("-" + shortId, Iden);
     optionalIdentifierNames.add(identifierName);
@@ -471,7 +469,7 @@ public class Parser {
       float[] restrictedValues) {
     String[] temp = new String[restrictedValues.length];
     for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
-    Identifier Iden = new Identifier(identifierName, "float", Default, description, shortId, temp);
+    Identifier Iden = new Identifier(identifierName, type, Default, description, shortId, temp);
     optionalIdentifiers.put("--" + identifierName, Iden);
     optionalIdentifiers.put("-" + shortId, Iden);
     optionalIdentifierNames.add(identifierName);
@@ -496,7 +494,7 @@ public class Parser {
       String shortId,
       boolean[] restrictedValues) {
     Identifier Iden =
-        new Identifier(identifierName, "boolean", Default, description, shortId, new String[0]);
+        new Identifier(identifierName, type, Default, description, shortId, new String[0]);
     optionalIdentifiers.put("--" + identifierName, Iden);
     optionalIdentifiers.put("-" + shortId, Iden);
     optionalIdentifierNames.add(identifierName);
