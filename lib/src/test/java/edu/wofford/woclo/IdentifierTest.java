@@ -6,12 +6,6 @@ import org.junit.jupiter.api.*;
 
 public class IdentifierTest {
   @Test
-  public void tesDefaulttConstructer() {
-    Identifier iden = new Identifier();
-    assertEquals("", iden.getName());
-  }
-
-  @Test
   public void testConstructer() {
     Identifier iden = new Identifier("arg1", "string", "5", "test");
     assertEquals("arg1", iden.getName());

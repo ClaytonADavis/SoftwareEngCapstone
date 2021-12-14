@@ -6,6 +6,12 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.*;
 
+/**
+ * Class which handles the reading and writing of argument information in XML files. Converts a
+ * string containing the contents of an XML file to two lists containing positional and named
+ * identifier information. Throws an InvalidXMLException if XML string is not the correct format.
+ * XML file information can be saved to a new file specified by the user.
+ */
 public class XMLParser {
 
   private String[] positionalArgs;
@@ -18,14 +24,15 @@ public class XMLParser {
   private String fileName = "";
   private String xml = "";
 
-  public boolean matches() {
-    return matches;
-  }
-
-  public String getUnformattedArg() {
-    return positionalArgs[1];
-  }
-
+  /**
+   * Reads positional and named argument information from the string conatining the XML file.
+   * Positional and named argument information are added to two separate lists. Throws an
+   * InvalidXMLException if the XML string is not the correct format.
+   *
+   * @param xml String conataining contents of XML file.
+   * @param fileName Name of file to write XML file information to.
+   * @throws InvalidXMLException
+   */
   public XMLParser(String xml, String fileName) {
     this.xml = xml;
     this.fileName = fileName;
@@ -47,10 +54,20 @@ public class XMLParser {
     }
   }
 
+  /**
+   * Returns the list of positional identifiers.
+   *
+   * @return
+   */
   public ArrayList<Identifier> getPositionalIdentifiers() {
     return identifiers;
   }
 
+  /**
+   * Returns the list of named identifiers
+   *
+   * @return
+   */
   public ArrayList<Identifier> getOptionalIdentifiers() {
     return optionalIdentifiers;
   }
@@ -105,6 +122,7 @@ public class XMLParser {
     return new String[0];
   }
 
+  /** Writes the information in teh XML file string to a new file. */
   public void writeXMLToFile() {
     try {
       File newXML = new File(fileName);

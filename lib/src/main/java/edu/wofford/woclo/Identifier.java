@@ -1,7 +1,14 @@
 package edu.wofford.woclo;
 
-import java.util.*;
-
+/**
+ * Class which represents identifiers for both positional and named arguments on the command line.
+ * Identifiers are represented by their name or short form name and can be of type string, integer,
+ * float, or boolean. When retrieving the value associated with an identifier the value is converted
+ * to that identifier's specified type. Possible values that can associated with the identifier can
+ * be restricted with an array of restricted values. Each identifier has a description and error
+ * message asssociated with it. The error message is specified when trying to retrieve an
+ * identifier's value but that value cannot be converted to the identifier's specified type.
+ */
 public class Identifier<T> {
 
   private String name;
@@ -12,16 +19,14 @@ public class Identifier<T> {
   private String shortName;
   private String[] restrictedValues;
 
-  public Identifier() {
-    name = "";
-    type = "";
-    value = "";
-    description = "";
-    errMsge = "";
-    shortName = "";
-    restrictedValues = new String[0];
-  }
-
+  /**
+   * Constructs a new identifier with the specified name, type, value, and description.
+   *
+   * @param name Name of new identifer.
+   * @param type Value type of new identifier.
+   * @param value Value of new identifer.
+   * @param description Description of new identifer.
+   */
   public Identifier(String name, String type, String value, String description) {
     this.name = name;
     this.type = type;
@@ -32,6 +37,16 @@ public class Identifier<T> {
     this.restrictedValues = new String[0];
   }
 
+  /**
+   * Constructs a new identifier with the specified name, type, value, description and short form
+   * name.
+   *
+   * @param name Name of new identifer.
+   * @param type Value type of new identifier.
+   * @param value Value of new identifer.
+   * @param description Description of new identifer.
+   * @param shortName Short form name of new Identifier.
+   */
   public Identifier(String name, String type, String value, String description, String shortName) {
     this.name = name;
     this.type = type;
@@ -42,6 +57,17 @@ public class Identifier<T> {
     this.restrictedValues = new String[0];
   }
 
+  /**
+   * Constructs a new identifier with the specified name, type, value, description, short form name
+   * and restricted values.
+   *
+   * @param name Name of new identifer.
+   * @param type Value type of new identifier.
+   * @param value Value of new identifer.
+   * @param description Description of new identifer.
+   * @param shortName Short form name of new Identifier.
+   * @param restrictedValues Restricted values of new identifier.
+   */
   public Identifier(
       String name,
       String type,
@@ -58,18 +84,44 @@ public class Identifier<T> {
     this.restrictedValues = restrictedValues;
   }
 
+  /**
+   * Returns the name of this identifier.
+   *
+   * @return
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Returns the type of this identifier.
+   *
+   * @return
+   */
   public String getType() {
     return type;
   }
 
+  /**
+   * Sets the value of this identifier to the specified value.
+   *
+   * @param value New value of identifer.
+   */
   public void setValue(String value) {
     this.value = value;
   }
 
+  /**
+   * Returns the value associated with this identifier and converts it to this identifier's
+   * specified type if possible. Throws an IncorrectArgumentTypeException if the value associated
+   * with this identifier cannot be converted t this identifier's specified type. Throws an
+   * InvalidTypeException if this identifier's specified tpye is not any of the following; string,
+   * integer, float, boolean.
+   *
+   * @return
+   * @throws IncorrectArgumentTypeException
+   * @throws InvalidTypeException
+   */
   public T getValue() {
     if (type.equals("string")) {
       return (T) value;
@@ -100,18 +152,38 @@ public class Identifier<T> {
     }
   }
 
+  /**
+   * Returns the description of this identifier.
+   *
+   * @return
+   */
   public String getDescription() {
     return description;
   }
 
+  /**
+   * Returns the error message of this identifer.
+   *
+   * @return
+   */
   public String errorMessage() {
     return errMsge;
   }
 
+  /**
+   * Returns the short form name of this identifier.
+   *
+   * @return
+   */
   public String getShortName() {
     return shortName;
   }
 
+  /**
+   * Returns a string of the array of restriced values for this identifier.
+   *
+   * @return
+   */
   public String getRestrictedValueString() {
     String output = "";
     for (int i = 0; i < restrictedValues.length; i++) {
@@ -122,6 +194,13 @@ public class Identifier<T> {
     return output;
   }
 
+  /**
+   * Returns true if the specified argument value is in the list of restricted values. False
+   * otherwise.
+   *
+   * @param arg Value to check to see if restricted.
+   * @return
+   */
   public boolean isRestrictedValue(String arg) {
     boolean contains = false;
     for (int i = 0; i < restrictedValues.length; i++)
@@ -129,6 +208,11 @@ public class Identifier<T> {
     return contains || restrictedValues.length == 0;
   }
 
+  /**
+   * Returns the default value of this identifier.
+   *
+   * @return
+   */
   public String getDefault() {
     if (value.equals("false")) return "";
     return value;

@@ -3,9 +3,22 @@ package edu.wofford.woclo;
 import java.util.*;
 
 /**
- * This class takes and array of command line arguments and maps them to a list of identifiers
- * provided by the user. It allows the user to request arguments by specific identifiers. It also
- * recognizes when a help flag is in the arguments.
+ * This class takes and array of command line arguments and maps their values to a list of arguments
+ * specified by the user. Positional Arguments, which are represented on the command line by only
+ * their values are supported. Positional values on the command line are mapped sequentially to the
+ * positional identifiers added to the parser object in the order they were added by the user. Named
+ * arguments, which are represented by their argument name (or shortform name if specified by the
+ * user) and value on the command line are supported. They can be recognized in any order on a list
+ * of command line values. Arguments of types string, integer, float, and boolean are supported.
+ * Named arguments of type boolean do not have corresponding command line values. Default values can
+ * be specified for named arguments. Restrictions can be set for both positional and named
+ * arguments. The help flag (-h or --help) is reserved for displaying a customizable usage message.
+ * Command line values mapped to identifiers can be retrieved by using their corresponding argument
+ * name. XML files can also be used to specify which positional or named identifiers are expected on
+ * the command line. The XML file conatining the argument information must be represented as a
+ * string and be the first argument in the command line. XML file information can also be saved if
+ * in addition to an XML file the name of the file to save the information to is specified as the
+ * second argument on the command line.
  */
 public class Parser {
   /** The list of identifiers. */
@@ -19,10 +32,10 @@ public class Parser {
   private String usage;
 
   /**
-   * Contructor. Takes program name and usage message as required arguments.
+   * Makes a new parser object with the specified program name and usage message.
    *
-   * @param name
-   * @param usage
+   * @param name The name of the program.
+   * @param usage Desired usage message.
    */
   public Parser(String name, String usage) {
     identifierNames = new ArrayList<String>();
@@ -35,9 +48,9 @@ public class Parser {
   }
 
   /**
-   * Returns true if the command line contains a help flag.
+   * Returns true if the list of command line values contains a help (-h or --help) flag.
    *
-   * @param argArr
+   * @param args Array of command line values.
    */
   private boolean getHelp(String[] args) {
     for (String s : args) {
@@ -48,13 +61,17 @@ public class Parser {
     return false;
   }
 
-  /** Returns a help message */
+  /**
+   * Returns a help message conatining the program name and usage message specified in the
+   * contructor as well as details about all specified postional and named arguments.
+   */
   public String getHelpMessage() {
     return helpMsg;
   }
 
   /**
-   * Creates a help message from the positional and named arguments currently in the parser object.
+   * Creates a help message using the program name, usage message, and details from the positional
+   * and named arguments currently in the parser object.
    */
   private void constructHelpMsg() {
     helpMsg = "usage: java " + programName + " [-h]";
@@ -211,15 +228,7 @@ public class Parser {
     }
     return b;
   }
-  /**
-   * Gets optional values from command line then return the argument list without optional values.
-   * Throws exceptions for if an argument in the given argument list does not exist or if the
-   * argument is of the incorrect type.
-   *
-   * @param command
-   * @throws MissingArgumentexception
-   * @throws IncorrectArgumentTypeException
-   */
+
   private String[] setOptionals(String[] command) {
     List<String> noOpt = new ArrayList<String>();
     for (int i = 0; i < command.length; i++) {
@@ -257,95 +266,177 @@ public class Parser {
   }
 
   /**
-   * adds a positional iddentifier to the parser object of type String.
+   * adds a positional iddentifier of the specified identifierName with the specified description to
+   * the parser object of type String.
    *
-   * @param id
-   * @param description
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
    */
-  public void addIdentifier(String id, String description) {
-    Identifier Iden = new Identifier(id, "string", "", description, "", new String[0]);
-    identifiers.put(id, Iden);
-    identifierNames.add(id);
+  public void addIdentifier(String identifierName, String description) {
+    Identifier Iden = new Identifier(identifierName, "string", "", description, "", new String[0]);
+    identifiers.put(identifierName, Iden);
+    identifierNames.add(identifierName);
   }
   /**
-   * adds a positional identifier to the parser object of type float, integer, or string.
+   * adds a positional iddentifier of the specified identifierName with the specified description to
+   * the parser object of type string, integer or float.
    *
-   * @param id
-   * @param description
-   * @param type
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float)
    */
-  public void addIdentifier(String id, String description, String type) {
-    Identifier Iden = new Identifier(id, type, "", description, "", new String[0]);
-    identifiers.put(id, Iden);
-    identifierNames.add(id);
+  public void addIdentifier(String identifierName, String description, String type) {
+    Identifier Iden = new Identifier(identifierName, type, "", description, "", new String[0]);
+    identifiers.put(identifierName, Iden);
+    identifierNames.add(identifierName);
   }
 
-  public void addIdentifier(String id, String description, String type, String[] restrictedValues) {
-    Identifier Iden = new Identifier(id, type, "", description, "", restrictedValues);
-    identifiers.put(id, Iden);
-    identifierNames.add(id);
-  }
-
-  public void addIdentifier(String id, String description, String type, int[] restrictedValues) {
-    String[] temp = new String[restrictedValues.length];
-    for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
-    Identifier Iden = new Identifier(id, type, "", description, "", temp);
-    identifiers.put(id, Iden);
-    identifierNames.add(id);
-  }
-
-  public void addIdentifier(String id, String description, String type, float[] restrictedValues) {
-    String[] temp = new String[restrictedValues.length];
-    for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
-    Identifier Iden = new Identifier(id, type, "", description, "", temp);
-    identifiers.put(id, Iden);
-    identifierNames.add(id);
-  }
-
+  /**
+   * adds a positional iddentifier of the specified identifierName with the specified description to
+   * the parser object of type string. Possible values of the new identifier are restriced to only
+   * the values in the list of restriced values.
+   *
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float)
+   * @param restrictedValues List of restriced values for identifier.
+   */
   public void addIdentifier(
-      String id, String description, String type, boolean[] restrictedValues) {
-    Identifier Iden = new Identifier(id, type, "", description, "", new String[0]);
-    identifiers.put(id, Iden);
-    identifierNames.add(id);
+      String identifierName, String description, String type, String[] restrictedValues) {
+    Identifier Iden =
+        new Identifier(identifierName, "string", "", description, "", restrictedValues);
+    identifiers.put(identifierName, Iden);
+    identifierNames.add(identifierName);
   }
 
   /**
-   * adds an optional identifier as a type string, integer, or float with a specified default value
+   * adds a positional iddentifier of the specified identifierName with the specified description to
+   * the parser object of type integer. Possible values of the new identifier are restriced to only
+   * the values in the list of restriced values.
    *
-   * @param id
-   * @param description
-   * @param type
-   * @param default
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float)
+   * @param restrictedValues List of restriced values for identifier.
    */
-  public void addOptionalIdentifier(String id, String description, String type, String Default) {
-    Identifier Iden = new Identifier(id, type, Default, description, "", new String[0]);
-    optionalIdentifiers.put("--" + id, Iden);
-    optionalIdentifierNames.add(id);
+  public void addIdentifier(
+      String identifierName, String description, String type, int[] restrictedValues) {
+    String[] temp = new String[restrictedValues.length];
+    for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
+    Identifier Iden = new Identifier(identifierName, "integer", "", description, "", temp);
+    identifiers.put(identifierName, Iden);
+    identifierNames.add(identifierName);
   }
 
+  /**
+   * adds a positional iddentifier of the specified identifierName with the specified description to
+   * the parser object of type float. Possible values of the new identifier are restriced to only
+   * the values in the list of restriced values.
+   *
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float)
+   * @param restrictedValues List of restriced values for identifier.
+   */
+  public void addIdentifier(
+      String identifierName, String description, String type, float[] restrictedValues) {
+    String[] temp = new String[restrictedValues.length];
+    for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
+    Identifier Iden = new Identifier(identifierName, "float", "", description, "", temp);
+    identifiers.put(identifierName, Iden);
+    identifierNames.add(identifierName);
+  }
+
+  /**
+   * adds a positional iddentifier of the specified identifierName with the specified description to
+   * the parser object of type boolean. Possible values of the new identifier are restriced to only
+   * the values in the list of restriced values.
+   *
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float)
+   * @param restrictedValues List of restriced values for identifier.
+   */
+  public void addIdentifier(
+      String identifierName, String description, String type, boolean[] restrictedValues) {
+    Identifier Iden = new Identifier(identifierName, "boolean", "", description, "", new String[0]);
+    identifiers.put(identifierName, Iden);
+    identifierNames.add(identifierName);
+  }
+
+  /**
+   * adds an optional identifier with the specified identifierName, description and default value of
+   * type string, integer, or float.
+   *
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float, boolean)
+   * @param default Default value of new identifer.
+   */
   public void addOptionalIdentifier(
-      String id, String description, String type, String Default, String shortId) {
-    Identifier Iden = new Identifier(id, type, Default, description, shortId, new String[0]);
-    optionalIdentifiers.put("--" + id, Iden);
+      String identifierName, String description, String type, String Default) {
+    Identifier Iden = new Identifier(identifierName, type, Default, description, "", new String[0]);
+    optionalIdentifiers.put("--" + identifierName, Iden);
+    optionalIdentifierNames.add(identifierName);
+  }
+
+  /**
+   * adds an optional identifier with the specified identifierName, description, short form name and
+   * default value of type string, integer, or float.
+   *
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float, boolean)
+   * @param default Default value of new identifer.
+   * @param shortId Short form name of new identifier.
+   */
+  public void addOptionalIdentifier(
+      String identifierName, String description, String type, String Default, String shortId) {
+    Identifier Iden =
+        new Identifier(identifierName, type, Default, description, shortId, new String[0]);
+    optionalIdentifiers.put("--" + identifierName, Iden);
     optionalIdentifiers.put("-" + shortId, Iden);
-    optionalIdentifierNames.add(id);
+    optionalIdentifierNames.add(identifierName);
   }
 
+  /**
+   * adds an optional identifier with the specified identifierName, description, short form name,
+   * default value and restricted values. of type string.
+   *
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float, boolean)
+   * @param default Default value of new identifer.
+   * @param shortId Short form name of new identifier.
+   * @param restrictedValues List of restricted values for new identifier.
+   */
   public void addOptionalIdentifier(
-      String id,
+      String identifierName,
       String description,
       String type,
       String Default,
       String shortId,
       String[] restrictedValues) {
-    Identifier Iden = new Identifier(id, type, Default, description, shortId, restrictedValues);
-    optionalIdentifiers.put("--" + id, Iden);
+    Identifier Iden =
+        new Identifier(identifierName, type, Default, description, shortId, restrictedValues);
+    optionalIdentifiers.put("--" + identifierName, Iden);
     optionalIdentifiers.put("-" + shortId, Iden);
-    optionalIdentifierNames.add(id);
+    optionalIdentifierNames.add(identifierName);
   }
 
+  /**
+   * adds an optional identifier with the specified identifierName, description, short form name,
+   * default value and restricted values. of type integer.
+   *
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float, boolean)
+   * @param default Default value of new identifer.
+   * @param shortId Short form name of new identifier.
+   * @param restrictedValues List of restricted values for new identifier.
+   */
   public void addOptionalIdentifier(
-      String id,
+      String identifierName,
       String description,
       String type,
       String Default,
@@ -353,14 +444,26 @@ public class Parser {
       int[] restrictedValues) {
     String[] temp = new String[restrictedValues.length];
     for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
-    Identifier Iden = new Identifier(id, type, Default, description, shortId, temp);
-    optionalIdentifiers.put("--" + id, Iden);
+    Identifier Iden =
+        new Identifier(identifierName, "integer", Default, description, shortId, temp);
+    optionalIdentifiers.put("--" + identifierName, Iden);
     optionalIdentifiers.put("-" + shortId, Iden);
-    optionalIdentifierNames.add(id);
+    optionalIdentifierNames.add(identifierName);
   }
 
+  /**
+   * adds an optional identifier with the specified identifierName, description, short form name,
+   * default value and restricted values. of type float.
+   *
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float, boolean)
+   * @param default Default value of new identifer.
+   * @param shortId Short form name of new identifier.
+   * @param restrictedValues List of restricted values for new identifier.
+   */
   public void addOptionalIdentifier(
-      String id,
+      String identifierName,
       String description,
       String type,
       String Default,
@@ -368,33 +471,107 @@ public class Parser {
       float[] restrictedValues) {
     String[] temp = new String[restrictedValues.length];
     for (int i = 0; i < restrictedValues.length; i++) temp[i] = String.valueOf(restrictedValues[i]);
-    Identifier Iden = new Identifier(id, type, Default, description, shortId, temp);
-    optionalIdentifiers.put("--" + id, Iden);
+    Identifier Iden = new Identifier(identifierName, "float", Default, description, shortId, temp);
+    optionalIdentifiers.put("--" + identifierName, Iden);
     optionalIdentifiers.put("-" + shortId, Iden);
-    optionalIdentifierNames.add(id);
+    optionalIdentifierNames.add(identifierName);
   }
 
+  /**
+   * adds an optional identifier with the specified identifierName, description, short form name,
+   * default value and restricted values. of type boolean.
+   *
+   * @param identifierName Name of new identifier.
+   * @param description Description of new identifier.
+   * @param type Value type of new identifier (string, integer, float, boolean)
+   * @param default Default value of new identifer.
+   * @param shortId Short form name of new identifier.
+   * @param restrictedValues List of restricted values for new identifier.
+   */
   public void addOptionalIdentifier(
-      String id,
+      String identifierName,
       String description,
       String type,
       String Default,
       String shortId,
       boolean[] restrictedValues) {
-    Identifier Iden = new Identifier(id, type, Default, description, shortId, new String[0]);
-    optionalIdentifiers.put("--" + id, Iden);
+    Identifier Iden =
+        new Identifier(identifierName, "boolean", Default, description, shortId, new String[0]);
+    optionalIdentifiers.put("--" + identifierName, Iden);
     optionalIdentifiers.put("-" + shortId, Iden);
-    optionalIdentifierNames.add(id);
+    optionalIdentifierNames.add(identifierName);
   }
 
+  /**
+   * Maps a string array of command line values to their corresponding ids in a hashmap. Positional
+   * values are sequentially from the command line values to the list of identifiers in the order
+   * the identifiers were added by the user. named argumentents are mapped according to their flag
+   * name. Throws a HelpException if the help (-h --help) flag is present. Throws a
+   * MissingArgumentException if a named argument is present in the given array of command line
+   * values but does not have a corresponding identifier specified by the user in the parser object.
+   * Throws a NotEnooughArgsException if the are less positional argument values in the array of
+   * command line values than identifiers specified by the user. Throws a TooManyArgsException if
+   * the are more positional argument values in the array of command line values than identifiers
+   * specified by the user. Throws an InformativeException if a command line value does not match a
+   * restriceted value specified by the user. Throws an InvalidXMLException if the given XML file is
+   * not the correct format or the arguments specified in the XML file are missing required details.
+   *
+   * @param commandLine String array of command line values.
+   * @throws HelpException
+   * @throws MissingArgumentExcpetion
+   * @throws NotEnoughArgsException
+   * @throws TooManyArgsException
+   * @throws InformativeException
+   */
   public void parseCommandLine(String[] commandLine) {
     parseArgList(commandLine, false, false);
   }
 
+  /**
+   * Maps a string array of command line values to their corresponding ids in a hashmap. Positional
+   * values are sequentially from the command line values to the list of identifiers in the order
+   * the identifiers were added by the user. named argumentents are mapped according to their flag
+   * name. Throws a HelpException if the help (-h --help) flag is present. Throws a
+   * MissingArgumentException if a named argument is present in the given array of command line
+   * values but does not have a corresponding identifier specified by the user in the parser object.
+   * Throws a NotEnooughArgsException if the are less positional argument values in the array of
+   * command line values than identifiers specified by the user. Throws a TooManyArgsException if
+   * the are more positional argument values in the array of command line values than identifiers
+   * specified by the user. Throws an InformativeException if a command line value does not match a
+   * restriceted value specified by the user.
+   *
+   * @param commandLine String array of command line values.
+   * @throws HelpException
+   * @throws MissingArgumentExcpetion
+   * @throws NotEnoughArgsException
+   * @throws TooManyArgsException
+   * @throws InformativeException
+   */
   public void parseCommandLine(String[] commandLine, boolean readXML) {
     parseArgList(commandLine, readXML, false);
   }
 
+  /**
+   * Maps a string array of command line values to their corresponding ids in a hashmap. Positional
+   * values are sequentially from the command line values to the list of identifiers in the order
+   * the identifiers were added by the user. named argumentents are mapped according to their flag
+   * name. Throws a HelpException if the help (-h --help) flag is present. Throws a
+   * MissingArgumentException if a named argument is present in the given array of command line
+   * values but does not have a corresponding identifier specified by the user in the parser object.
+   * Throws a NotEnooughArgsException if the are less positional argument values in the array of
+   * command line values than identifiers specified by the user. Throws a TooManyArgsException if
+   * the are more positional argument values in the array of command line values than identifiers
+   * specified by the user. Throws an InformativeException if a command line value does not match a
+   * restriceted value specified by the user. Throws an InvalidXMLException if the given XML file is
+   * not the correct format or the arguments specified in the XML file are missing required details.
+   *
+   * @param commandLine String array of command line values.
+   * @throws HelpException
+   * @throws MissingArgumentExcpetion
+   * @throws NotEnoughArgsException
+   * @throws TooManyArgsException
+   * @throws InformativeException
+   */
   public void parseCommandLine(String[] commandLine, boolean readXML, boolean writeXML) {
     if (!readXML && writeXML) {
       parseArgList(commandLine, true, writeXML);
@@ -403,16 +580,6 @@ public class Parser {
     }
   }
 
-  /**
-   * Maps a string array of command line values to their corresponding ids in a hashmap. throws
-   * exceptions for if a help flag is present or if too few or too many arguments are given.
-   *
-   * @param commandLine
-   * @throws HelpException
-   * @throws MissingArgumentExcpetion
-   * @throws NotEnoughArgsException
-   * @throws TooManyArgsException
-   */
   private void parseArgList(String[] commandLine, boolean readXML, boolean writeXML) {
     String firstArg = "";
     String secondArg = "";
@@ -488,10 +655,12 @@ public class Parser {
     }
   }
   /**
-   * Takes the name of and argument and returns the value corresponding to the given name of that
-   * argument's specified type.
+   * Returns the value of the identifier associated with the given argumentName of its specified
+   * type. Throws an IncorrectArgumentTypeException if the value cannot be converted to its expected
+   * type.
    *
-   * @param argumentName
+   * @param argumentName Name of argument to retrieve value of.
+   * @throws IncorrectArgumentTypeException
    */
   public <T> T getValue(String argumentName) {
     if (optionalIdentifiers.containsKey("--" + argumentName)) {
